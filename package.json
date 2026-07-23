@@ -1,0 +1,9 @@
+{
+  "name": "versa-3-cores",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Versa 3 Cores - desafio de 30 dias",
+  "dependencies": {
+    "@vercel/blob": "^0.27.0"
+  }
+}

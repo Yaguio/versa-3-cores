@@ -109,16 +109,15 @@
     overflow: hidden;
     flex-shrink: 0;
   }
-  @media (min-width: 700px) {
-    .hero-cover { aspect-ratio: 700 / 460; }
-    .hero-cover img { object-position: top center; }
-  }
   .hero-cover img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
     background: #fff;
+  }
+  @media (min-width: 700px) {
+    .hero-cover { max-width: 420px; margin: 0 auto; }
   }
   .hero-scrim {
     position: absolute;
@@ -775,15 +774,15 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
   ];
 
   var VOAH_MISHAPS = [
-    { texto: "Voah decidiu que o painel do carro precisava de arte nova — com caneta permanente.", dinheiro: -18, paciencia: -5 },
-    { texto: "Voah achou engraçado jogar o carregador do celular pela janela, no meio do trânsito.", dinheiro: -12, paciencia: -4 },
-    { texto: "Voah quebrou o suporte de celular tentando “consertar” ele mesmo.", dinheiro: -15, paciencia: -3 },
-    { texto: "Voah derramou suco de uva no banco de trás, testando a tese de que carro marrom absorve tudo.", dinheiro: -10, paciencia: -6 }
+    { texto: "Zoah decidiu que o painel do carro precisava de arte nova — com caneta permanente.", dinheiro: -18, paciencia: -5 },
+    { texto: "Zoah achou engraçado jogar o carregador do celular pela janela, no meio do trânsito.", dinheiro: -12, paciencia: -4 },
+    { texto: "Zoah quebrou o suporte de celular tentando “consertar” ele mesmo.", dinheiro: -15, paciencia: -3 },
+    { texto: "Zoah derramou suco de uva no banco de trás, testando a tese de que carro marrom absorve tudo.", dinheiro: -10, paciencia: -6 }
   ];
   var VOAH_GANHOS = [
-    { texto: "Voah achou uma nota dobrada no banco de trás e devolveu com orgulho.", dinheiro: 10, paciencia: 4 },
-    { texto: "Voah vendeu, sozinho e na cara de pau, um brinquedo velho pra um vizinho.", dinheiro: 8, paciencia: 3 },
-    { texto: "Voah convenceu um passageiro fofo a deixar uma gorjeta extra só de sorrir pra ele.", dinheiro: 12, paciencia: 5 }
+    { texto: "Zoah achou uma nota dobrada no banco de trás e devolveu com orgulho.", dinheiro: 10, paciencia: 4 },
+    { texto: "Zoah vendeu, sozinho e na cara de pau, um brinquedo velho pra um vizinho.", dinheiro: 8, paciencia: 3 },
+    { texto: "Zoah convenceu um passageiro fofo a deixar uma gorjeta extra só de sorrir pra ele.", dinheiro: 12, paciencia: 5 }
   ];
 
   var REST_FLAVORS = [
@@ -810,14 +809,14 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
     { texto: "Uma assinatura de aplicativo que ele esqueceu de cancelar renovou sozinha.", valor: 22 }
   ];
 
-  function buildVoahEvent() {
+  function buildZoahEvent() {
     var bom = Math.random() < 0.2;
     var pool = bom ? VOAH_GANHOS : VOAH_MISHAPS;
     var pick = pool[Math.floor(Math.random() * pool.length)];
     return {
       emoji: "🧒",
-      titulo: "O pequeno Voah",
-      texto: "Enquanto Hernalton dirige, o celular vibra: é a babá mandando notícia do Voah.",
+      titulo: "O pequeno Zoah",
+      texto: "Enquanto Hernalton dirige, o celular vibra: é a babá mandando notícia do Zoah.",
       escolhas: [
         { rotulo: "Ver o que aconteceu", sub: "respirar fundo antes",
           resultado: pick.texto, dinheiro: pick.dinheiro, paciencia: pick.paciencia, minutos: 5, ruim: !bom }
@@ -828,7 +827,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
   function pickFamilyEvent() {
     var roll = Math.random();
     if (roll < 0.45) return NUBLINHO_EVENTS[Math.floor(Math.random() * NUBLINHO_EVENTS.length)];
-    if (roll < 0.70) return buildVoahEvent();
+    if (roll < 0.70) return buildZoahEvent();
     return BERRUGA_FAVORS[Math.floor(Math.random() * BERRUGA_FAVORS.length)];
   }
 
@@ -979,12 +978,36 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
     return { list: list, entry: entry };
   }
 
+  var RANKING_API = "/api/ranking";
+
+  function fetchGlobalRanking() {
+    return fetch(RANKING_API, { cache: "no-store" })
+      .then(function (r) { if (!r.ok) throw new Error("bad status"); return r.json(); })
+      .then(function (data) { return { list: data.list || [], online: true }; })
+      .catch(function () { return { list: loadRanking(), online: false }; });
+  }
+
+  function submitGlobalRanking(jogador, dia) {
+    var entry = { jogador: jogador || "Anônimo", dia: dia };
+    return fetch(RANKING_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(entry)
+    })
+      .then(function (r) { if (!r.ok) throw new Error("bad status"); return r.json(); })
+      .then(function (data) { return { list: data.list || [], entry: entry, online: true }; })
+      .catch(function () {
+        var local = addRankingEntry(jogador, dia);
+        return { list: local.list, entry: local.entry, online: false };
+      });
+  }
+
   function renderRankingHtml(list, destaque) {
     if (!list.length) {
       return '<p class="body-text">Ainda não tem ninguém no ranking. Seja o primeiro a fechar a lista.</p>';
     }
     var rows = list.map(function (r, i) {
-      var isDestaque = destaque && r.quando === destaque.quando && r.jogador === destaque.jogador;
+      var isDestaque = destaque && r.jogador === destaque.jogador && r.dia === destaque.dia;
       return (
         '<div class="row"' + (isDestaque ? ' style="color:var(--gold);font-weight:700;"' : '') + '>' +
           '<span>' + (i + 1) + '. ' + escapeHtml(r.jogador) + '</span>' +
@@ -1134,7 +1157,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       '<div class="scene fade-in">' +
         '<div class="eyebrow">o desafio de 30 dias de Versa 3 Cores</div>' +
         '<p class="body-text">O Versa é marrom. Depois de tantas batidas que o dono jura que “não foi culpa minha”, pode ganhar até mais duas cores diferentes de porta e capô. Hernalton Junior mora na Baixada mas roda o Rio inteiro, não gosta de trabalhar, só aceita corrida boa, é mão de vaca até com o próprio ar condicionado, e reclama de todo passageiro do dia.</p>' +
-        '<p class="body-text">E passageiro nem é o pior: o primo Nublinho sempre tem uma ideia de negócio, o pequeno Voah apronta das suas, seu Tortuga cobra favor pra escola de samba Acadêmicos do Vinho, e o primo Fabi Jujuba ri de cada decisão errada.</p>' +
+        '<p class="body-text">E passageiro nem é o pior: o primo Nublinho sempre tem uma ideia de negócio, o pequeno Zoah apronta das suas, seu Tortuga cobra favor pra escola de samba Acadêmicos do Vinho, e o primo Fabi Jujuba ri de cada decisão errada.</p>' +
         '<p class="body-text"><b>Você tem 30 dias</b> pra ele comprar tudo da lista abaixo com o lucro das corridas. Trabalhar demais cansa e encurta o dia seguinte; ficar em casa — paixão secreta dele — recupera o fôlego. <b>Perde</b> quem fundir o motor, falir de vez, ou chegar ao dia 31 sem fechar a lista.</p>' +
         '<ul class="wishlist-intro">' + lista + '</ul>' +
         '<label class="field-label" for="jogador-input">seu nome (aparece no ranking)</label>' +
@@ -1167,12 +1190,11 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
   }
 
   function renderRanking() {
-    var list = loadRanking();
     device.innerHTML =
       '<div class="scene fade-in">' +
         '<div class="eyebrow">ranking · quem chegou mais rápido</div>' +
         '<h2 class="scene-title">🏆 Melhores tempos</h2>' +
-        renderRankingHtml(list) +
+        '<div id="ranking-slot"><p class="body-text">Carregando ranking global...</p></div>' +
       '</div>' +
       '<div class="actions">' +
         '<button class="btn primary" id="btn-voltar-intro">Voltar</button>' +
@@ -1180,6 +1202,12 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
     document.getElementById("btn-voltar-intro").addEventListener("click", function () {
       state.screen = "intro";
       render();
+    });
+    fetchGlobalRanking().then(function (result) {
+      var slot = document.getElementById("ranking-slot");
+      if (!slot) return;
+      slot.innerHTML = renderRankingHtml(result.list) +
+        (result.online ? "" : '<p class="footnote" style="margin-top:8px">sem conexão — mostrando ranking local deste aparelho</p>');
     });
   }
 
@@ -1981,7 +2009,6 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
 
   function renderWin() {
     clearSavedGame();
-    var ranking = addRankingEntry(state.jogador, state.dia);
     device.innerHTML =
       '<div class="scene fade-in">' +
         '<div class="eyebrow">desfecho de ' + escapeHtml(state.jogador) + '</div>' +
@@ -1991,12 +2018,18 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
         renderDayTrack() +
         statsGridHtml() +
         '<div class="eyebrow">ranking · melhores tempos</div>' +
-        renderRankingHtml(ranking.list, ranking.entry) +
+        '<div id="ranking-slot"><p class="body-text">Enviando pro ranking global...</p></div>' +
       '</div>' +
       '<div class="actions">' +
         '<button class="btn primary" id="btn-again">Rodar outro desafio</button>' +
       '</div>';
     bindAgain();
+    submitGlobalRanking(state.jogador, state.dia).then(function (result) {
+      var slot = document.getElementById("ranking-slot");
+      if (!slot) return;
+      slot.innerHTML = renderRankingHtml(result.list, result.entry) +
+        (result.online ? "" : '<p class="footnote" style="margin-top:8px">sem conexão — salvo só neste aparelho</p>');
+    });
   }
 
   function renderLose(tipo) {
