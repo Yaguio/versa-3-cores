@@ -385,7 +385,7 @@
 </style>
 
 <div class="device" id="device"></div>
-<div class="footnote">desafio de 30 dias &middot; sem servidor &middot; sem app de verdade envolvido</div>
+<div class="footnote">desafio de 15 dias &middot; sem servidor &middot; sem app de verdade envolvido</div>
 
 <script>
 (function () {
@@ -404,7 +404,7 @@
   var CONSECUTIVE_DECLINE_LIMIT = 2;
   var RIDE_COUNTDOWN_SECONDS = 12;
   var FAMILY_CHANCE = 0.15;       // chance de interrupção familiar antes de cada corrida
-  var TOTAL_DIAS = 30;
+  var TOTAL_DIAS = 15;
 
   var FATIGUE_BASE_MINUTES = 840; // 14h possíveis quando descansado
   var FATIGUE_MIN_MINUTES = 180;  // 3h mínimas quando exausto
@@ -459,13 +459,13 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
 
   // coisas banais que ele acha extremamente importantes, em ordem de preço
   var WISHLIST = [
-    { texto: "Fatia de bolo no sinal", meta: 20, sucesso: "Bolo comprado. De brigadeiro, óbvio — o resto é luxo." },
-    { texto: "Lanterna de seta nova", meta: 70, sucesso: "Lanterna nova instalada. Já pode ir bater em outro lugar pra estrear." },
-    { texto: "Conserto do barulho do PC", meta: 140, sucesso: "Barulho resolvido. Por enquanto — amanhã volta outro." },
-    { texto: "Skin nova do CS", meta: 220, sucesso: "Skin comprada. O rank não sobe, mas o inventário sim." },
-    { texto: "Wi-Fi atrasado", meta: 300, sucesso: "Internet de volta. Prioridade nacional, finalmente resolvida." },
-    { texto: "Fantasia da escola de samba", meta: 550, sucesso: "Fantasia comprada. Já treina o passinho parado no farol." },
-    { texto: "Pensão do mês", meta: 1400, sucesso: "Pensão paga. Ligação de cobrança cancelada — por ora." }
+    { texto: "Fatia de bolo no sinal", meta: 12, sucesso: "Bolo comprado. De brigadeiro, óbvio — o resto é luxo." },
+    { texto: "Lanterna de seta nova", meta: 42, sucesso: "Lanterna nova instalada. Já pode ir bater em outro lugar pra estrear." },
+    { texto: "Conserto do barulho do PC", meta: 85, sucesso: "Barulho resolvido. Por enquanto — amanhã volta outro." },
+    { texto: "Skin nova do CS", meta: 135, sucesso: "Skin comprada. O rank não sobe, mas o inventário sim." },
+    { texto: "Wi-Fi atrasado", meta: 180, sucesso: "Internet de volta. Prioridade nacional, finalmente resolvida." },
+    { texto: "Fantasia da escola de samba", meta: 335, sucesso: "Fantasia comprada. Já treina o passinho parado no farol." },
+    { texto: "Pensão atrasada", meta: 855, sucesso: "Pensão paga. Ligação de cobrança cancelada — por ora." }
   ];
 
   // corridas espalhadas pela Baixada Fluminense e o resto do Rio
@@ -1191,17 +1191,17 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
         '<div class="hero-scrim"></div>' +
       '</div>' +
       '<div class="scene fade-in">' +
-        '<div class="eyebrow">o desafio de 30 dias de Versa 3 Cores</div>' +
+        '<div class="eyebrow">o desafio de 15 dias de Versa 3 Cores</div>' +
         '<p class="body-text">O Versa é marrom. Depois de tantas batidas que o dono jura que “não foi culpa minha”, pode ganhar até mais duas cores diferentes de porta e capô. Hernalton Junior mora na Baixada mas roda o Rio inteiro, não gosta de trabalhar, só aceita corrida boa, é mão de vaca até com o próprio ar condicionado, e reclama de todo passageiro do dia.</p>' +
         '<p class="body-text">E passageiro nem é o pior: o primo Nublinho sempre tem uma ideia de negócio, o pequeno Zoah apronta das suas, seu Tortuga cobra favor pra escola de samba Acadêmicos do Vinho, e o primo Fabi Jujuba ri de cada decisão errada.</p>' +
-        '<p class="body-text"><b>Você tem 30 dias</b> pra ele comprar tudo da lista abaixo com o lucro das corridas. Trabalhar demais cansa e encurta o dia seguinte; ficar em casa — paixão secreta dele — recupera o fôlego. <b>Perde</b> quem fundir o motor, falir de vez, ou chegar ao dia 31 sem fechar a lista.</p>' +
+        '<p class="body-text"><b>Você tem uma quinzena</b> (15 dias) pra ele comprar tudo da lista abaixo com o lucro das corridas. Trabalhar demais cansa e encurta o dia seguinte; ficar em casa — paixão secreta dele — recupera o fôlego. <b>Perde</b> quem fundir o motor, falir de vez, ou chegar ao dia 16 sem fechar a lista.</p>' +
         '<ul class="wishlist-intro">' + lista + '</ul>' +
         '<label class="field-label" for="jogador-input">seu nome (aparece no ranking)</label>' +
         '<input class="name-input mono" id="jogador-input" maxlength="24" value="' + escapeHtml(state.jogador) + '" />' +
       '</div>' +
       '<div class="actions">' +
         (saved ? '<button class="btn primary" id="btn-continuar-save">Continuar jogo salvo<span class="sub">dia ' + saved.dia + '/30 · ' + formatMoney(saved.dinheiro) + ' no caixa</span></button>' : '') +
-        '<button class="btn' + (saved ? " ghost" : " primary") + '" id="btn-start">' + (saved ? "Começar do zero" : "Começar o desafio") + '<span class="sub">' + (saved ? "apaga o jogo salvo" : "30 dias, um Versa marrom, uma lista enorme") + '</span></button>' +
+        '<button class="btn' + (saved ? " ghost" : " primary") + '" id="btn-start">' + (saved ? "Começar do zero" : "Começar o desafio") + '<span class="sub">' + (saved ? "apaga o jogo salvo" : "15 dias, um Versa marrom, uma lista enorme") + '</span></button>' +
         '<button class="btn ghost" id="btn-ver-ranking">Ver ranking</button>' +
       '</div>';
 
@@ -2050,7 +2050,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
         '<div class="eyebrow">desfecho de ' + escapeHtml(state.jogador) + '</div>' +
         '<span class="badge-outcome win">vitória</span>' +
         '<h1 class="title">Comprou tudo. Sério.</h1>' +
-        '<p class="body-text">Bolo, lanterna de seta, PC, skin do CS, Wi-Fi, fantasia e até a pensão — tudo pago no lucro das corridas, no dia ' + state.dia + ' dos 30. Feriado merecido a partir de agora.</p>' +
+        '<p class="body-text">Bolo, lanterna de seta, PC, skin do CS, Wi-Fi, fantasia e até a pensão — tudo pago no lucro das corridas, no dia ' + state.dia + ' dos ' + TOTAL_DIAS + '. Feriado merecido a partir de agora.</p>' +
         renderDayTrack() +
         statsGridHtml() +
         '<div class="eyebrow">ranking · melhores tempos</div>' +
@@ -2082,8 +2082,8 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       texto = "A dívida cresceu rápido demais. CP apareceu numa quarta à noite, ainda de farda do quartel, e deixou bem claro que da próxima vez não seria só conversa. O Versa fica de garantia — e Hernalton reconsidera as prioridades da vida.";
     } else {
       var faltam = WISHLIST.length - state.comprasFeitas.length;
-      titulo = "Os 30 dias acabaram.";
-      texto = "A lista não fechou a tempo — faltaram " + faltam + " ite" + (faltam === 1 ? "m" : "ns") + ". O desafio era esse mês, e o mês virou.";
+      titulo = "Os 15 dias acabaram.";
+      texto = "A lista não fechou a tempo — faltaram " + faltam + " ite" + (faltam === 1 ? "m" : "ns") + ". O desafio era essa quinzena, e a quinzena virou.";
     }
     var quote = "";
     if (tipo === "prazo") {
