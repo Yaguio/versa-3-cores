@@ -21,48 +21,8 @@
     --sunset-cyan: #5ec8e8;
     --shadow: 0 30px 60px -20px rgba(15,5,30,0.65);
   }
-  :root[data-theme="light"] {
-    --asphalt: #f7e9dc;
-    --asphalt-2: #f0d8c2;
-    --console: #fffaf4;
-    --console-2: #fbeee0;
-    --line: #e8cbb0;
-    --ink: #3a2440;
-    --ink-dim: #7a5a72;
-    --ink-faint: #ab8aa0;
-    --gold: #b3760f;
-    --gold-dim: #8a5c0c;
-    --patch-red: #a8402f;
-    --patch-teal: #2b746c;
-    --car-brown: #7a5238;
-    --good: #2f8452;
-    --bad: #a8402f;
-    --sunset-pink: #c94f83;
-    --sunset-cyan: #2f8fb0;
-    --shadow: 0 30px 60px -25px rgba(120,60,40,0.22);
-  }
-  @media (prefers-color-scheme: light) {
-    :root:not([data-theme="dark"]) {
-      --asphalt: #f7e9dc;
-      --asphalt-2: #f0d8c2;
-      --console: #fffaf4;
-      --console-2: #fbeee0;
-      --line: #e8cbb0;
-      --ink: #3a2440;
-      --ink-dim: #7a5a72;
-      --ink-faint: #ab8aa0;
-      --gold: #b3760f;
-      --gold-dim: #8a5c0c;
-      --patch-red: #a8402f;
-      --patch-teal: #2b746c;
-      --car-brown: #7a5238;
-      --good: #2f8452;
-      --bad: #a8402f;
-      --sunset-pink: #c94f83;
-      --sunset-cyan: #2f8fb0;
-      --shadow: 0 30px 60px -25px rgba(120,60,40,0.22);
-    }
-  }
+  /* Versa 3 Cores is a night-in-Rio poster world by design — the palette
+     stays fixed regardless of system/browser light-mode preference. */
 
   * { box-sizing: border-box; }
   html, body {
@@ -443,7 +403,7 @@
   var MAINT_EVERY = 8;            // a cada N corridas aceitas, revisão
   var CONSECUTIVE_DECLINE_LIMIT = 2;
   var RIDE_COUNTDOWN_SECONDS = 12;
-  var FAMILY_CHANCE = 0.28;       // chance de interrupção familiar antes de cada corrida
+  var FAMILY_CHANCE = 0.15;       // chance de interrupção familiar antes de cada corrida
   var TOTAL_DIAS = 30;
 
   var FATIGUE_BASE_MINUTES = 840; // 14h possíveis quando descansado
@@ -728,6 +688,48 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
           resultado: "Nublinho guarda o bilhete “pra próxima”, ofendido.",
           dinheiro: 0, paciencia: -2, minutos: 5 }
       ]
+    },
+    {
+      emoji: "📱",
+      titulo: "Primo Nublinho e o aplicativo de aposta",
+      texto: "“Baixei um app de aposta esportiva, primo. É só colocar uns trocado que dobra hoje ainda.”",
+      escolhas: [
+        { rotulo: "Colocar uns trocados", sub: "só hoje, promete ele",
+          resultado: "O aplicativo trava bem na hora de sacar. Estranho, isso.",
+          resultadoSorte: "Contra tudo, o valor cai na conta. Nublinho já quer reinvestir o dobro.",
+          dinheiro: -20, paciencia: -5, minutos: 10, sorteChance: 40, sorteBonus: 45, ruim: true },
+        { rotulo: "Não entrar dessa vez", sub: "app estranho demais",
+          resultado: "“Vish, medroso”, ele solta, guardando o celular no bolso.",
+          dinheiro: 0, paciencia: -2, minutos: 5 }
+      ]
+    },
+    {
+      emoji: "🎧",
+      titulo: "Primo Nublinho e o lote de fone",
+      texto: "“Comprei um lote de fone de ouvido ‘original’, primo. Só falta alguém pra revender.”",
+      escolhas: [
+        { rotulo: "Entrar na revenda", sub: "lucro garantido, segundo ele",
+          resultado: "Os fones tocam só de um lado. Os dois lados, na verdade — nenhum funciona.",
+          resultadoSorte: "Um cliente aparece do nada e leva a caixa toda, sem perguntar muito.",
+          dinheiro: -18, paciencia: -4, minutos: 12, sorteChance: 40, sorteBonus: 38, ruim: true },
+        { rotulo: "Não entrar dessa vez", sub: "fone “original” suspeito",
+          resultado: "Nublinho guarda a caixa no porta-malas “só por enquanto”.",
+          dinheiro: 0, paciencia: -2, minutos: 5 }
+      ]
+    },
+    {
+      emoji: "🚿",
+      titulo: "Primo Nublinho e o lava-rápido",
+      texto: "“Achei um espaço perfeito pra um lava-rápido de fim de semana, primo. Só falta o balde e a fé.”",
+      escolhas: [
+        { rotulo: "Entrar de sócio", sub: "capital pro balde e a mangueira",
+          resultado: "O “espaço perfeito” era a calçada de casa. O vizinho já reclamou.",
+          resultadoSorte: "O lava-rápido de calçada bomba logo no primeiro sábado, sem explicação.",
+          dinheiro: -22, paciencia: -5, minutos: 15, sorteChance: 40, sorteBonus: 50, ruim: true },
+        { rotulo: "Não entrar dessa vez", sub: "fé é dele, balde também",
+          resultado: "Nublinho já sai catando balde em outro lugar.",
+          dinheiro: 0, paciencia: -3, minutos: 6 }
+      ]
     }
   ];
 
@@ -770,19 +772,45 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
           resultado: "Tortuga resmunga que “esse menino não ajuda nem a escola do pai”.",
           dinheiro: 0, paciencia: -6, minutos: 8 }
       ]
+    },
+    {
+      emoji: "📋",
+      titulo: "Seu Tortuga precisa de um favor",
+      texto: "Pede pra buscar as apostilas de coreografia impressas na gráfica, antes que a comissão de frente reclame.",
+      escolhas: [
+        { rotulo: "Fazer o favor", sub: "gráfica fica longe",
+          resultado: "Entrega feita. Tortuga já está de olho no próximo favor.",
+          dinheiro: 0, paciencia: -4, minutos: 40 },
+        { rotulo: "Arranjar uma desculpa", sub: "menos tempo, mais treta",
+          resultado: "“Você não tem 20 minutinhos pro seu pai?”, ele repete, magoado.",
+          dinheiro: 0, paciencia: -6, minutos: 10 }
+      ]
+    },
+    {
+      emoji: "🥫",
+      titulo: "Seu Tortuga precisa de um favor",
+      texto: "Pede pra passar na sucata e recolher um latão de alumínio pra fantasia da comissão de frente.",
+      escolhas: [
+        { rotulo: "Fazer o favor", sub: "o Versa não vai gostar do cheiro",
+          resultado: "O Versa cheira a sucata o resto do dia, mas o latão chegou.",
+          dinheiro: 0, paciencia: -3, minutos: 50 },
+        { rotulo: "Arranjar uma desculpa", sub: "menos tempo, mais treta",
+          resultado: "Tortuga resmunga que “ninguém mais ajuda a escola direito”.",
+          dinheiro: 0, paciencia: -6, minutos: 12 }
+      ]
     }
   ];
 
   var VOAH_MISHAPS = [
-    { texto: "Zoah decidiu que o painel do carro precisava de arte nova — com caneta permanente.", dinheiro: -18, paciencia: -5 },
-    { texto: "Zoah achou engraçado jogar o carregador do celular pela janela, no meio do trânsito.", dinheiro: -12, paciencia: -4 },
-    { texto: "Zoah quebrou o suporte de celular tentando “consertar” ele mesmo.", dinheiro: -15, paciencia: -3 },
-    { texto: "Zoah derramou suco de uva no banco de trás, testando a tese de que carro marrom absorve tudo.", dinheiro: -10, paciencia: -6 }
+    { texto: "Zoah decidiu que a parede da sala precisava de um mural novo — com caneta permanente.", dinheiro: -18, paciencia: -5 },
+    { texto: "Zoah jogou o controle da TV no vaso sanitário “pra ver se afundava”. Afundou.", dinheiro: -12, paciencia: -4 },
+    { texto: "Zoah quebrou o tablet tentando descobrir “o que tem dentro”.", dinheiro: -15, paciencia: -3 },
+    { texto: "Zoah entupiu a pia da cozinha enfiando brinquedo, e o encanador não veio de graça.", dinheiro: -10, paciencia: -6 }
   ];
   var VOAH_GANHOS = [
-    { texto: "Zoah achou uma nota dobrada no banco de trás e devolveu com orgulho.", dinheiro: 10, paciencia: 4 },
-    { texto: "Zoah vendeu, sozinho e na cara de pau, um brinquedo velho pra um vizinho.", dinheiro: 8, paciencia: 3 },
-    { texto: "Zoah convenceu um passageiro fofo a deixar uma gorjeta extra só de sorrir pra ele.", dinheiro: 12, paciencia: 5 }
+    { texto: "Zoah achou uma nota esquecida no sofá e devolveu com orgulho.", dinheiro: 10, paciencia: 4 },
+    { texto: "Zoah vendeu, sozinho e na cara de pau, um brinquedo velho pro filho do vizinho.", dinheiro: 8, paciencia: 3 },
+    { texto: "Zoah convenceu a vovó a mandar um Pix “de incentivo” pro pai.", dinheiro: 12, paciencia: 5 }
   ];
 
   var REST_FLAVORS = [
@@ -825,10 +853,17 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
   }
 
   function pickFamilyEvent() {
-    var roll = Math.random();
-    if (roll < 0.45) return NUBLINHO_EVENTS[Math.floor(Math.random() * NUBLINHO_EVENTS.length)];
-    if (roll < 0.70) return buildZoahEvent();
-    return BERRUGA_FAVORS[Math.floor(Math.random() * BERRUGA_FAVORS.length)];
+    var pick;
+    var attempts = 0;
+    do {
+      var roll = Math.random();
+      if (roll < 0.45) pick = NUBLINHO_EVENTS[Math.floor(Math.random() * NUBLINHO_EVENTS.length)];
+      else if (roll < 0.70) pick = buildZoahEvent();
+      else pick = BERRUGA_FAVORS[Math.floor(Math.random() * BERRUGA_FAVORS.length)];
+      attempts++;
+    } while (pick.texto === state.lastFamilyTexto && pick.emoji !== "🧒" && attempts < 4);
+    state.lastFamilyTexto = pick.texto;
+    return pick;
   }
 
   var ENDING_QUOTES_PATIENCE = {
@@ -895,6 +930,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       recusasSeguidas: 0,
       lastMaintAt: 0,
       fabiTrigger: false,
+      lastFamilyTexto: null,
       dividaCP: 0,
       comeuHoje: false,
       dinheiroInicioDia: 0,
