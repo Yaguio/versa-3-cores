@@ -97,6 +97,9 @@
     display: flex;
     flex-direction: column;
   }
+  @media (min-width: 700px) {
+    .device { max-width: 720px; }
+  }
 
   /* ---- hero cover (intro) ---- */
   .hero-cover {
@@ -105,6 +108,10 @@
     aspect-ratio: 700 / 937;
     overflow: hidden;
     flex-shrink: 0;
+  }
+  @media (min-width: 700px) {
+    .hero-cover { aspect-ratio: 700 / 460; }
+    .hero-cover img { object-position: top center; }
   }
   .hero-cover img {
     width: 100%;
@@ -246,6 +253,32 @@
   .ticket .bad { color: var(--bad); font-weight: 700; }
   .ticket hr { border: none; border-top: 1px dashed var(--line); margin: 2px 0; }
 
+  /* ---- ride request card (app-style) ---- */
+  .countdown-wrap { margin-bottom: 2px; }
+  .ride-fare-hero { text-align: center; padding: 2px 0 4px; }
+  .ride-fare-label {
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, Menlo, monospace;
+    font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-faint);
+  }
+  .ride-fare-value { font-size: 36px; font-weight: 800; color: var(--gold); font-variant-numeric: tabular-nums; line-height: 1.2; }
+  .ride-route { display: flex; gap: 12px; padding: 6px 2px; }
+  .ride-route-line { display: flex; flex-direction: column; align-items: center; width: 12px; padding-top: 5px; flex-shrink: 0; }
+  .ride-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+  .ride-dot.origin { border: 2px solid var(--sunset-cyan); background: transparent; box-sizing: border-box; }
+  .ride-dot.dest { background: var(--sunset-pink); }
+  .ride-route-connector { width: 2px; flex: 1; min-height: 26px; background: var(--line); margin: 3px 0; }
+  .ride-stops { display: flex; flex-direction: column; justify-content: space-between; gap: 18px; flex: 1; min-width: 0; }
+  .ride-stop-label {
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, Menlo, monospace;
+    font-size: 10.5px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-faint);
+  }
+  .ride-stop-name { font-weight: 700; font-size: 15px; margin-top: 2px; }
+  .ride-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ride-tag {
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, Menlo, monospace;
+    font-size: 12px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-dim);
+  }
+
   .eyebrow {
     font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, Menlo, monospace;
     font-size: 11px;
@@ -287,7 +320,8 @@
   .actions {
     padding: 16px 20px 22px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     gap: 10px;
     border-top: 1px solid var(--line);
     background: var(--console-2);
@@ -302,6 +336,7 @@
     font-family: inherit;
     cursor: pointer;
     text-align: left;
+    flex: 1 1 240px;
     background: var(--console);
     color: var(--ink);
     border: 1px solid var(--line);
@@ -337,6 +372,9 @@
   }
 
   .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (min-width: 700px) {
+    .summary-grid { grid-template-columns: repeat(3, 1fr); }
+  }
   .summary-cell { background: var(--asphalt-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
   .summary-cell.wide { grid-column: 1 / -1; }
   .summary-cell .k {
@@ -405,6 +443,7 @@
   var FALENCIA_LIMIT = -60;       // dinheiro no vermelho além disso = fim de jogo
   var MAINT_EVERY = 8;            // a cada N corridas aceitas, revisão
   var CONSECUTIVE_DECLINE_LIMIT = 2;
+  var RIDE_COUNTDOWN_SECONDS = 12;
   var FAMILY_CHANCE = 0.28;       // chance de interrupção familiar antes de cada corrida
   var TOTAL_DIAS = 30;
 
@@ -805,6 +844,11 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
   // ---------------------------------------------------------------
 
   var state = null;
+  var rideCountdownTimer = null;
+
+  function clearRideCountdown() {
+    if (rideCountdownTimer) { clearInterval(rideCountdownTimer); rideCountdownTimer = null; }
+  }
 
   function minutosBudgetHoje(cansaco) {
     return Math.round(clamp(FATIGUE_BASE_MINUTES - cansaco * FATIGUE_PER_PONTO, FATIGUE_MIN_MINUTES, FATIGUE_BASE_MINUTES));
@@ -893,6 +937,28 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
   // ---------------------------------------------------------------
 
   var RANKING_KEY = "versa3coresRanking";
+  var SAVE_KEY = "versa3coresSave";
+
+  function saveGame() {
+    try {
+      var copy = {};
+      for (var k in state) {
+        if (Object.prototype.hasOwnProperty.call(state, k) && typeof state[k] !== "function") copy[k] = state[k];
+      }
+      localStorage.setItem(SAVE_KEY, JSON.stringify(copy));
+    } catch (e) {}
+  }
+  function loadSavedGame() {
+    try {
+      var raw = localStorage.getItem(SAVE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+  function clearSavedGame() {
+    try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
+  }
 
   function loadRanking() {
     try {
@@ -1027,6 +1093,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
   }
 
   function render() {
+    clearRideCountdown();
     if (state.screen === "intro") return renderIntro();
     if (state.screen === "day-intro") return renderDayIntro();
     if (state.screen === "day-end") return renderDayEnd();
@@ -1057,6 +1124,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
     var lista = WISHLIST.map(function (g) {
       return '<li>' + escapeHtml(g.texto) + ' <span>' + formatMoney(g.meta) + '</span></li>';
     }).join("");
+    var saved = loadSavedGame();
 
     device.innerHTML =
       '<div class="hero-cover">' +
@@ -1073,13 +1141,23 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
         '<input class="name-input mono" id="jogador-input" maxlength="24" value="' + escapeHtml(state.jogador) + '" />' +
       '</div>' +
       '<div class="actions">' +
-        '<button class="btn primary" id="btn-start">Começar o desafio<span class="sub">30 dias, um Versa marrom, uma lista enorme</span></button>' +
+        (saved ? '<button class="btn primary" id="btn-continuar-save">Continuar jogo salvo<span class="sub">dia ' + saved.dia + '/30 · ' + formatMoney(saved.dinheiro) + ' no caixa</span></button>' : '') +
+        '<button class="btn' + (saved ? " ghost" : " primary") + '" id="btn-start">' + (saved ? "Começar do zero" : "Começar o desafio") + '<span class="sub">' + (saved ? "apaga o jogo salvo" : "30 dias, um Versa marrom, uma lista enorme") + '</span></button>' +
         '<button class="btn ghost" id="btn-ver-ranking">Ver ranking</button>' +
       '</div>';
 
+    var continuarBtn = document.getElementById("btn-continuar-save");
+    if (continuarBtn) {
+      continuarBtn.addEventListener("click", function () {
+        state = saved;
+        render();
+      });
+    }
     document.getElementById("btn-start").addEventListener("click", function () {
       var input = document.getElementById("jogador-input");
-      state.jogador = (input.value || state.jogador).trim() || "Anônimo";
+      var nomeDigitado = (input.value || state.jogador).trim() || "Anônimo";
+      clearSavedGame();
+      state = freshState(nomeDigitado);
       goToDayIntro();
     });
     document.getElementById("btn-ver-ranking").addEventListener("click", function () {
@@ -1121,6 +1199,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
     state.comeuHoje = false;
     state.dinheiroInicioDia = state.dinheiro;
     state.screen = "day-intro";
+    saveGame();
     render();
   }
 
@@ -1343,9 +1422,12 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
     var base = state.deck.pop();
     var transito = pickWeighted(TRANSITO_OPTIONS);
     var custo = (base.km / consumoAtual()) * PRECO_GASOLINA * transito.mult;
+    var jitter = 0.8 + Math.random() * 0.4;
+    var custoAprox = Math.round((custo * jitter) / 5) * 5;
+    if (custoAprox <= 0) custoAprox = Math.max(5, Math.round(custo * jitter));
     state.currentRide = {
       origem: base.origem, destino: base.destino, km: base.km, valor: base.valor,
-      transito: transito, custo: custo, lucro: base.valor - custo
+      transito: transito, custo: custo, custoAprox: custoAprox, lucro: base.valor - custo
     };
     state.forced = state.recusasSeguidas >= CONSECUTIVE_DECLINE_LIMIT;
     state.screen = "ride";
@@ -1356,38 +1438,76 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
     var r = state.currentRide;
     var margemFina = r.lucro >= 0 && r.lucro < 8;
     var prejuizo = r.lucro < 0;
+    var pesado = r.transito.mult >= 1.7;
 
     var flavor;
     if (state.forced) flavor = FORCED_ACCEPT_FLAVOR;
-    else if (prejuizo) flavor = "Essa corrida vai dar prejuízo se ele aceitar. Hernalton sabe. Talvez aceite mesmo assim.";
-    else if (margemFina) flavor = "Corrida de margem fina. O Hernalton já sabe o que vem a seguir.";
-    else flavor = "Corrida decente. Talvez hoje não seja tão ruim.";
+    else if (pesado) flavor = "Trânsito pesado nessa. Vai comer combustível de um jeito que só se sabe depois.";
+    else if (r.valor < 20) flavor = "Corrida barata. Vai que compensa.";
+    else flavor = "Só vai saber se valeu a pena depois de aceitar.";
 
     device.innerHTML =
       renderStatbar() +
       '<div class="scene fade-in">' +
-        '<div class="eyebrow">dia ' + state.dia + ' · tentativa ' + (state.tentativasHoje + 1) + '</div>' +
-        '<h2 class="scene-title">' + escapeHtml(r.origem) + ' → ' + escapeHtml(r.destino) + '</h2>' +
-        '<div class="ticket">' +
-          '<div class="row"><span>Distância</span><span class="val">' + r.km.toFixed(1) + ' km</span></div>' +
-          '<div class="row"><span>Trânsito</span><span class="val">' + escapeHtml(r.transito.label) + '</span></div>' +
-          '<div class="row"><span>Valor da corrida</span><span class="fare">' + formatMoney(r.valor) + '</span></div>' +
-          '<div class="row"><span>Combustível estimado</span><span class="val">-' + formatMoney(r.custo) + '</span></div>' +
-          '<hr />' +
-          '<div class="row"><span>Lucro estimado</span><span class="' + (r.lucro >= 0 ? "good" : "bad") + '">' + formatMoney(r.lucro) + '</span></div>' +
+        '<div class="eyebrow">nova solicitação · dia ' + state.dia + '</div>' +
+        (state.forced ? "" :
+          '<div class="countdown-wrap">' +
+            '<div class="meter"><span id="ride-countdown-bar" style="width:100%;background:var(--good)"></span></div>' +
+          '</div>'
+        ) +
+        '<div class="ride-fare-hero">' +
+          '<div class="ride-fare-label">valor da corrida</div>' +
+          '<div class="ride-fare-value">' + formatMoney(r.valor) + '</div>' +
+        '</div>' +
+        '<div class="ride-route">' +
+          '<div class="ride-route-line">' +
+            '<span class="ride-dot origin"></span>' +
+            '<span class="ride-route-connector"></span>' +
+            '<span class="ride-dot dest"></span>' +
+          '</div>' +
+          '<div class="ride-stops">' +
+            '<div><div class="ride-stop-label">embarque</div><div class="ride-stop-name">' + escapeHtml(r.origem) + '</div></div>' +
+            '<div><div class="ride-stop-label">destino</div><div class="ride-stop-name">' + escapeHtml(r.destino) + '</div></div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="ride-tags">' +
+          '<span class="ride-tag">' + r.km.toFixed(1) + ' km</span>' +
+          '<span class="ride-tag">' + escapeHtml(r.transito.label) + '</span>' +
+          '<span class="ride-tag">combustível ~' + formatMoney(r.custoAprox) + '</span>' +
         '</div>' +
         '<p class="body-text">' + flavor + '</p>' +
       '</div>' +
       '<div class="actions">' +
-        (state.forced ? '' : '<button class="btn ghost danger" id="btn-decline">Recusar<span class="sub">deixar pra próxima, essa não compensa</span></button>') +
-        '<button class="btn primary" id="btn-accept">Aceitar<span class="sub">' + (prejuizo ? "vai reclamar (com razão, dessa vez)" : "essa vale a pena") + '</span></button>' +
+        (state.forced ? '' : '<button class="btn ghost danger" id="btn-decline">Recusar<span class="sub">deixar pra próxima</span></button>') +
+        '<button class="btn primary" id="btn-accept">Aceitar<span class="sub">só vai saber o lucro depois</span></button>' +
       '</div>';
 
     document.getElementById("btn-accept").addEventListener("click", function () {
+      clearRideCountdown();
       acceptRide(prejuizo, margemFina);
     });
     var declineBtn = document.getElementById("btn-decline");
-    if (declineBtn) declineBtn.addEventListener("click", function () { declineRide(prejuizo); });
+    if (declineBtn) declineBtn.addEventListener("click", function () {
+      clearRideCountdown();
+      declineRide(prejuizo, false);
+    });
+
+    if (!state.forced) {
+      var remaining = RIDE_COUNTDOWN_SECONDS;
+      var bar = document.getElementById("ride-countdown-bar");
+      rideCountdownTimer = setInterval(function () {
+        remaining -= 1;
+        var pct = clamp((remaining / RIDE_COUNTDOWN_SECONDS) * 100, 0, 100);
+        if (bar) {
+          bar.style.width = pct + "%";
+          bar.style.background = patienceColor(pct);
+        }
+        if (remaining <= 0) {
+          clearRideCountdown();
+          declineRide(prejuizo, true);
+        }
+      }, 1000);
+    }
   }
 
   function acceptRide(prejuizo, margemFina) {
@@ -1412,13 +1532,17 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
     render();
   }
 
-  function declineRide(prejuizo) {
+  function declineRide(prejuizo, auto) {
     state.recusadas++;
     state.tentativasHoje++;
     state.recusasSeguidas++;
     state.minutos += 20 + Math.floor(Math.random() * 20);
-    var pool = prejuizo ? DECLINE_FLAVOR_PREJUIZO : DECLINE_FLAVOR_BARATA;
-    state.lastDecline = pool[Math.floor(Math.random() * pool.length)];
+    if (auto) {
+      state.lastDecline = "Demorou demais decidindo — o app cancelou a corrida sozinho e já ofereceu pra outro motorista.";
+    } else {
+      var pool = prejuizo ? DECLINE_FLAVOR_PREJUIZO : DECLINE_FLAVOR_BARATA;
+      state.lastDecline = pool[Math.floor(Math.random() * pool.length)];
+    }
     state.screen = "declined";
     render();
   }
@@ -1856,6 +1980,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
   }
 
   function renderWin() {
+    clearSavedGame();
     var ranking = addRankingEntry(state.jogador, state.dia);
     device.innerHTML =
       '<div class="scene fade-in">' +
@@ -1875,6 +2000,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
   }
 
   function renderLose(tipo) {
+    clearSavedGame();
     var titulo, texto;
     if (tipo === "motor") {
       titulo = "O motor fundiu.";
