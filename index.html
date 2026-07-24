@@ -417,6 +417,7 @@
   var MAINT_EVERY = 8;            // a cada N corridas aceitas, revisão
   var REPARO_CUSTO_POR_PONTO = 2.2; // custo do conserto avulso por ponto de motor recuperado
   var MOTOR_CRITICO = 25;         // abaixo disso, o jogo sugere consertar
+  var CUSTO_MOTOR_FUNDIDO = 480;  // guincho + reforma geral quando o motor funde de vez — dolorido de propósito
   var CONSECUTIVE_DECLINE_LIMIT = 2;
   var RIDE_COUNTDOWN_SECONDS = 12;
   var FAMILY_CHANCE = 0.15;       // chance de interrupção familiar antes de cada corrida
@@ -460,28 +461,28 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
   ];
 
   var DECLINE_FLAVOR_PREJUIZO = [
-    "Recusada. “Não vou pagar pra rodar, faz-me rir.”",
-    "Hernalton olha o lucro estimado negativo e nem termina de ler. Recusada na hora.",
+    "Recusada. “Não vou pagar pra rodar, faz-me rir, mermão.”",
+    "Hernalton olha o lucro estimado negativo e nem termina de ler. Recusada na hora, sem dó.",
     "“Prejuízo é prejuízo, mesmo com nome bonito de app.” Recusada."
   ];
   var DECLINE_FLAVOR_BARATA = [
     "Recusada. Hernalton nem desliga o motor — muito menos o ar, isso custa gasolina.",
     "“Corrida barata? Passa, passa.” Recusada sem dó.",
-    "Ele olha o valor, balança a cabeça, e já recusa antes de terminar de carregar."
+    "Ele olha o valor, balança a cabeça, solta um “só que não” e já recusa antes de terminar de carregar."
   ];
 
   var FORCED_ACCEPT_FLAVOR =
-    "O app avisa: “sua taxa de aceitação está baixa”. Hernalton resmunga, mas dessa vez não tem escapatória — vai ter que aceitar.";
+    "O app avisa: “sua taxa de aceitação está baixa”. Hernalton resmunga, mas dessa vez não tem pra onde correr — vai ter que topar.";
 
   // coisas banais que ele acha extremamente importantes, em ordem de preço
   var WISHLIST = [
     { texto: "Fatia de bolo no sinal", meta: 12, sucesso: "Bolo comprado. De brigadeiro, óbvio — o resto é luxo." },
-    { texto: "Lanterna de seta nova", meta: 42, sucesso: "Lanterna nova instalada. Já pode ir bater em outro lugar pra estrear." },
-    { texto: "Conserto do barulho do PC", meta: 85, sucesso: "Barulho resolvido. Por enquanto — amanhã volta outro." },
-    { texto: "Skin nova do CS", meta: 135, sucesso: "Skin comprada. O rank não sobe, mas o inventário sim." },
-    { texto: "Wi-Fi atrasado", meta: 180, sucesso: "Internet de volta. Prioridade nacional, finalmente resolvida." },
-    { texto: "Fantasia da escola de samba", meta: 335, sucesso: "Fantasia comprada. Já treina o passinho parado no farol." },
-    { texto: "Pensão atrasada", meta: 855, sucesso: "Pensão paga. Ligação de cobrança cancelada — por ora." }
+    { texto: "Lanterna de seta nova", meta: 42, sucesso: "Lanterna nova instalada. Já pode ir bater em outro lugar pra estrear, mermão." },
+    { texto: "Conserto do barulho do PC", meta: 85, sucesso: "Barulho resolvido. Por enquanto — amanhã volta outro, é osso." },
+    { texto: "Skin nova do CS", meta: 135, sucesso: "Skin comprada. O rank não sobe, mas o inventário sim, e já era." },
+    { texto: "Wi-Fi atrasado", meta: 180, sucesso: "Internet de volta. Prioridade nacional, finalmente resolvida, valeu a pena." },
+    { texto: "Fantasia da escola de samba", meta: 335, sucesso: "Fantasia comprada. Já treina o passinho parado no sinal." },
+    { texto: "Pensão atrasada", meta: 855, sucesso: "Pensão paga. Ligação de cobrança cancelada — por ora, que é bom, nada dura." }
   ];
 
   // corridas espalhadas pela Baixada Fluminense e o resto do Rio
@@ -509,7 +510,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       texto: "O painel pisca avisando troca de óleo. Hernalton olha o preço do óleo bom e sente uma pontada no peito.",
       escolhas: [
         { rotulo: "Óleo mais barato", sub: "economiza uns trocado agora",
-          resultado: "Óleo genérico no motor. Vai rodar, mas o motor sente cada buraco da Baixada.",
+          resultado: "Óleo genérico no motor. Vai rodar, mas o motor sente cada buraco da Baixada, sinistro.",
           custo: 15, decayNovo: 3.0, motor: -8, ruim: true },
         { rotulo: "Óleo bom, da marca", sub: "caro, mas o motor agradece",
           resultado: "Óleo de verdade trocado. O motor ronca mais manso, o bolso sente o tranco.",
@@ -522,7 +523,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       texto: "Os pneus de trás já mostram a lona. Chove à toa no Rio e o Versa escorrega em qualquer poça.",
       escolhas: [
         { rotulo: "Deixar pra próxima revisão", sub: "os pneus aguentam mais um pouco",
-          resultado: "Vai rodando na fé. Um dia isso cobra a conta.",
+          resultado: "Vai rodando na fé, no sapatinho. Um dia isso cobra a conta.",
           custo: 0, decayNovo: null, motor: -8, risco: 8, ruim: true },
         { rotulo: "Trocar os pneus agora", sub: "caro, mas mais seguro",
           resultado: "Pneus novos. Prato cheio pra segurança, vazio pra carteira.",
@@ -539,7 +540,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       texto: "Passageiro entra cheirando a garrafa fechada, senta no banco da frente por engano, e já pergunta se pode abrir a janela pra “respirar melhor”.",
       escolhas: [
         { rotulo: "Abrir a janela e rezar", sub: "torcer pra não passar mal",
-          resultado: "A janela abre, o vento bate, e por um triz o rodízio fica só na memória. Hernalton dirige com uma mão e a outra pronta no zíper da porta.",
+          resultado: "A janela abre, o vento bate, e por um triz o rodízio fica só na memória. Hernalton dirige com uma mão e a outra pronta no zíper da porta — foi por pouco, mermão.",
           dinheiro: 2, paciencia: -6, dano: 10, estrelas: 0.1 },
         { rotulo: "Parar no posto e pôr pra fora", sub: "prevenção é tudo",
           resultado: "Hernalton para no posto, abre a porta, espera o rapaz “aliviar” na grama e continua a corrida como se nada tivesse acontecido.",
@@ -562,7 +563,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
     {
       emoji: "💔",
       titulo: "O casal em crise",
-      texto: "Entram brigando e pedem, os dois ao mesmo tempo, pro motorista dar a razão. O clima no banco de trás está mais pesado que o trânsito.",
+      texto: "Entram brigando e pedem, os dois ao mesmo tempo, pro motorista dar a razão. O clima no banco de trás tá mais pesado que o trânsito da Linha Vermelha.",
       escolhas: [
         { rotulo: "Dar razão pros dois", sub: "diplomacia de motorista",
           resultado: "Hernalton concorda com tudo que os dois falam, ao mesmo tempo, sem entender mais nada. Eles se entreolham e começam a rir. Gorjeta surpresa.",
@@ -578,7 +579,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       texto: "Time perdeu de goleada. O passageiro entra cantando música de torcida do jeito errado, meio chorando, meio gritando, pedindo pra Hernalton concordar que o juiz roubou.",
       escolhas: [
         { rotulo: "Concordar com tudo", sub: "juiz sempre rouba mesmo",
-          resultado: "Hernalton bate palma junto, xinga o juiz imaginário e ganha um novo melhor amigo por 12 minutos de corrida.",
+          resultado: "Hernalton bate palma junto, xinga o juiz imaginário e ganha um novo parça por 12 minutos de corrida.",
           dinheiro: 5, paciencia: 2, dano: 0, estrelas: 0.4 },
         { rotulo: "Falar que o time jogou mal", sub: "sinceridade brutal",
           resultado: "O clima esfria na hora. Passageiro fica quieto o resto da viagem olhando pela janela, mas pelo menos parou de cantar.",
@@ -601,10 +602,10 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
     {
       emoji: "💼",
       titulo: "O executivo apressado",
-      texto: "Entra no carro ainda no telefone, pede pra “pisar”, e a cada semáforo vermelho solta um suspiro de quem perdeu um negócio de milhões.",
+      texto: "Entra no carro ainda no telefone, pede pra “pisar”, e a cada sinal vermelho solta um suspiro de quem perdeu um negócio de milhões.",
       escolhas: [
         { rotulo: "Pegar um atalho arriscado", sub: "acelerar mesmo",
-          resultado: "O atalho corta cinco minutos, o executivo agradece com uma gorjeta boa, mas o Hernalton passa raspando num quebra-mola que ele jurava não existir.",
+          resultado: "O atalho corta cinco minutos, o executivo agradece com uma gorjeta boa, mas o Hernalton passa raspando num quebra-mola que ele jurava não existir. Sinistro.",
           dinheiro: 9, paciencia: -4, dano: 18, estrelas: 0.2 },
         { rotulo: "Manter a calma e o limite de velocidade", sub: "sem pressa, sem multa",
           resultado: "Hernalton dirige no seu ritmo de sempre. O executivo bufa o caminho todo, mas ao menos ninguém arranha nada.",
@@ -617,7 +618,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       texto: "Um motoboy pede carona porque a moto quebrou no meio da entrega. Promete pagar em dinheiro e em “conselhos de motorista experiente”.",
       escolhas: [
         { rotulo: "Puxar conversa com ele", sub: "network de app",
-          resultado: "Os dois passam a viagem trocando histórias de passageiro terrível. Hernalton sai da corrida com moral renovada e uma boa gorjeta.",
+          resultado: "Os dois passam a viagem numa resenha boa trocando histórias de passageiro terrível. Hernalton sai da corrida com moral renovada e uma boa gorjeta.",
           dinheiro: 7, paciencia: 6, dano: 0, estrelas: 0.4 },
         { rotulo: "Levar calado, só ouvindo", sub: "economizar energia",
           resultado: "Hernalton só balança a cabeça de vez em quando. Chegam ao destino, motoboy paga e sai satisfeito mesmo assim.",
@@ -633,7 +634,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
           resultado: "Hernalton muda o ar, troca a música, abre o perfume do carro. O passageiro não tem mais do que reclamar e, sem jeito, deixa cinco estrelas.",
           dinheiro: 5, paciencia: -6, dano: 0, estrelas: 0.6 },
         { rotulo: "Ignorar e dirigir", sub: "quem tem que dar nota sou eu",
-          resultado: "Hernalton não muda nada. O passageiro reclama a viagem inteira sozinho, como um rádio ligado que ninguém escuta, e não deixa nem um centavo de gorjeta.",
+          resultado: "Hernalton não muda nada. O passageiro reclama a viagem inteira sozinho, como um rádio ligado que ninguém escuta, e não deixa nem um trocado de gorjeta.",
           dinheiro: 0, paciencia: -3, dano: 0, estrelas: -0.8 }
       ]
     },
@@ -656,7 +657,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       texto: "Ela entra ofegante: “Maternidade, rápido, por favor!” Hernalton engole seco e pisa fundo.",
       escolhas: [
         { rotulo: "Cortar caminho arriscado", sub: "todo atalho vale agora",
-          resultado: "Chega em tempo recorde, buzinando em cada esquina. O marido dela entra em pânico no banco de trás, mas dá certo.",
+          resultado: "Chega em tempo recorde, buzinando em cada esquina, no talo. O marido dela surta no banco de trás, mas dá certo.",
           dinheiro: 12, paciencia: -6, dano: 15, estrelas: 0.5 },
         { rotulo: "Seguir o trânsito com calma", sub: "sem arriscar um perrengue",
           resultado: "Chegam alguns minutos depois, mas inteiros. Ela ainda tem tempo de sobra — era falso alarme, aliás.",
@@ -705,7 +706,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
     {
       emoji: "🎉",
       titulo: "A galera da balada",
-      texto: "Cinco amigas entram num carro de quatro lugares, som no talo do celular, e pedem uma selfie “com o motorista mais gato da noite”.",
+      texto: "Cinco amigas entram num carro de quatro lugares, som no talo do celular, animadíssimas pra balada, e pedem uma selfie “com o motorista mais gato da noite”.",
       escolhas: [
         { rotulo: "Topar a selfie e o clima", sub: "entrar na vibe",
           resultado: "A foto sai ótima, elas prometem marcar Hernalton nos stories. Ele nunca vai saber se marcaram mesmo.",
@@ -760,7 +761,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       texto: "Chegando no destino, ele revira os bolsos, pálido: “Cara, esqueci a carteira. Faço um PIX pra você depois, juro.”",
       escolhas: [
         { rotulo: "Confiar e deixar ele ir", sub: "fé no PIX prometido",
-          resultado: "O PIX nunca chega. Hernalton aprende, de novo, que fé não paga gasolina.",
+          resultado: "O PIX nunca chega. Caô de larga, mermão. Hernalton aprende, de novo, que fé não paga gasolina.",
           dinheiro: -8, paciencia: -5, dano: 0, estrelas: -0.1 },
         { rotulo: "Insistir pra resolver ali mesmo", sub: "ninguém sai sem pagar",
           resultado: "Depois de muito custo, ele acha uma nota amassada no fundo da mochila. Resolvido, sem climão.",
@@ -812,7 +813,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       texto: "Nublinho aparece do nada com uma cartela de rifa: “compra aí, primo, o caixa de som já é praticamente seu”.",
       escolhas: [
         { rotulo: "Comprar 3 números", sub: "apoiar o primo, talvez ganhar",
-          resultado: "Compra os números só pra ver a cara feia dele sumir.",
+          resultado: "Compra os números só pra ver a cara feia dele sumir, de boa.",
           resultadoSorte: "Contra todas as chances, o número bate! Nublinho jura que a rifa era de verdade.",
           dinheiro: -15, paciencia: -4, minutos: 15, sorteChance: 40, sorteBonus: 40, ruim: true },
         { rotulo: "Não entrar dessa vez", sub: "economizar o dinheiro e o clima",
@@ -858,7 +859,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
           resultadoSorte: "Contra tudo, o valor cai na conta. Nublinho já quer reinvestir o dobro.",
           dinheiro: -20, paciencia: -5, minutos: 10, sorteChance: 40, sorteBonus: 45, ruim: true },
         { rotulo: "Não entrar dessa vez", sub: "app estranho demais",
-          resultado: "“Vish, medroso”, ele solta, guardando o celular no bolso.",
+          resultado: "“Vish, mermão, medroso”, ele solta, guardando o celular no bolso.",
           dinheiro: 0, paciencia: -2, minutos: 5 }
       ]
     },
@@ -955,10 +956,10 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       texto: "O pai, dono da Acadêmicos do Vinho, liga pedindo pra buscar uns metros de tecido pro estandarte da escola.",
       escolhas: [
         { rotulo: "Fazer o favor", sub: "vai comer um tempão do dia",
-          resultado: "Tortuga agradece com um tapinha nas costas e uma nota amassada de gasolina.",
+          resultado: "Tortuga agradece com um tapinha nas costas e uma nota amassada de gasolina. Suave.",
           dinheiro: 10, paciencia: -3, minutos: 45 },
         { rotulo: "Arranjar uma desculpa", sub: "menos tempo, mais treta",
-          resultado: "Tortuga faz cara de decepcionado por uma semana inteira, ao menos na imaginação de Hernalton.",
+          resultado: "Tortuga faz cara de decepcionado por uma semana inteira, ao menos na imaginação de Hernalton, que já sabe que vai levar bronca.",
           dinheiro: 0, paciencia: -6, minutos: 10 }
       ]
     },
@@ -1086,8 +1087,8 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
 
   // gastos aleatórios que caem sem avisar
   var GASTOS_ALEATORIOS = [
-    { texto: "Venceu a parcela do passeio de barco na Urca, no cartão da prima. Ela já descontou da conta dele sem avisar.", valor: 45 },
-    { texto: "A conta de luz atrasada voltou com multa e juros.", valor: 30 },
+    { texto: "Venceu a parcela do passeio de barco na Urca, no cartão da prima. Ela já descontou da conta dele sem nem avisar.", valor: 45 },
+    { texto: "A conta de luz atrasada voltou com multa e juros. Sinistro.", valor: 30 },
     { texto: "Uma assinatura de aplicativo que ele esqueceu de cancelar renovou sozinha.", valor: 22 }
   ];
 
@@ -1453,6 +1454,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
     if (state.screen === "cp") return renderCP();
     if (state.screen === "cp-emergencia") return renderCPEmergencia();
     if (state.screen === "repair") return renderRepair();
+    if (state.screen === "motor-fundido") return renderMotorFundido();
     if (state.screen === "win") return renderWin();
     if (state.screen === "lose_motor") return renderLose("motor");
     if (state.screen === "lose_falencia") return renderLose("falencia");
@@ -1474,9 +1476,9 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       '</div>' +
       '<div class="scene fade-in">' +
         '<div class="eyebrow">o desafio de 15 dias de Versa 3 Cores</div>' +
-        '<p class="body-text">O Versa é marrom. Depois de tantas batidas que o dono jura que “não foi culpa minha”, pode ganhar até mais duas cores diferentes de porta e capô. Hernalton Junior mora na Baixada mas roda o Rio inteiro, não gosta de trabalhar, só aceita corrida boa, é mão de vaca até com o próprio ar condicionado, e reclama de todo passageiro do dia.</p>' +
-        '<p class="body-text">E passageiro nem é o pior: o primo Nublinho sempre tem uma ideia de negócio, o pequeno Zoah apronta das suas, seu Tortuga cobra favor pra escola de samba Acadêmicos do Vinho, e o primo Fabi Jujuba ri de cada decisão errada.</p>' +
-        '<p class="body-text"><b>Você tem uma quinzena</b> (15 dias) pra ele comprar tudo da lista abaixo com o lucro das corridas. Trabalhar demais cansa e encurta o dia seguinte; ficar em casa — paixão secreta dele — recupera o fôlego. <b>Perde</b> quem fundir o motor, falir de vez, ou chegar ao dia 16 sem fechar a lista.</p>' +
+        '<p class="body-text">O Versa é marrom. Depois de tantas batidas que o dono jura que “não foi culpa minha”, pode ganhar até mais duas cores diferentes de porta e capô. Hernalton Junior mora na Baixada mas roda o Rio inteiro, não tá a fim de trampar, só topa corrida boa, é mão de vaca até com o próprio ar condicionado, e vive de marcação em cima de todo passageiro do dia.</p>' +
+        '<p class="body-text">E passageiro nem é o pior, mermão: o primo Nublinho sempre tem uma ideia de negócio, o pequeno Zoah apronta das suas, seu Tortuga cobra favor pra escola de samba Acadêmicos do Vinho, e o primo Fabi Jujuba tira uma casquinha de cada decisão errada.</p>' +
+        '<p class="body-text"><b>Você tem uma quinzena</b> (15 dias) pra ele fechar a grana de tudo que tá na lista abaixo com o lucro das corridas. Trabalhar demais acaba com o cara e encurta o dia seguinte; ficar em casa — paixão secreta dele — recupera o gás. <b>Perde</b> quem fundir o motor, quebrar de vez, ou chegar ao dia 16 sem fechar a lista.</p>' +
         '<ul class="wishlist-intro">' + lista + '</ul>' +
         '<label class="field-label" for="jogador-input">seu nome (aparece no ranking)</label>' +
         '<input class="name-input mono" id="jogador-input" maxlength="24" value="' + escapeHtml(state.jogador) + '" />' +
@@ -1511,7 +1513,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
     device.innerHTML =
       '<div class="scene fade-in">' +
         '<div class="eyebrow">ranking · quem chegou mais rápido</div>' +
-        '<h2 class="scene-title">🏆 Melhores tempos</h2>' +
+        '<h2 class="scene-title">🏆 Melhores tempos, quem mandou bem</h2>' +
         '<div id="ranking-slot"><p class="body-text">Carregando ranking global...</p></div>' +
       '</div>' +
       '<div class="actions">' +
@@ -1557,13 +1559,13 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
         '<div class="eyebrow">dia ' + state.dia + ' de ' + TOTAL_DIAS + '</div>' +
         '<h2 class="scene-title">' + cansacoLabel(state.cansaco) + '</h2>' +
         renderDayTrack() +
-        '<p class="body-text">Hoje ele aguenta até <b>' + horas + 'h</b> de trabalho antes de precisar parar.</p>' +
-        '<p class="body-text">Trabalhar demais cansa e encurta o dia de amanhã. Ficar em casa recupera tudo — só que também não rende nada.</p>' +
-        (state.motor <= MOTOR_CRITICO ? '<p class="quote" style="color:var(--bad)">🔧 O motor tá em ' + Math.round(state.motor) + '%, quase fundindo. Bora numa oficina antes de continuar.</p>' : '') +
+        '<p class="body-text">Hoje ele aguenta até <b>' + horas + 'h</b> de corre antes de precisar parar.</p>' +
+        '<p class="body-text">Trampar demais acaba com o cara e encurta o dia de amanhã. Ficar em casa recupera tudo — só que também não cai grana nenhuma.</p>' +
+        (state.motor <= MOTOR_CRITICO ? '<p class="quote" style="color:var(--bad)">🔧 O motor tá em ' + Math.round(state.motor) + '%, quase fundindo. Bora numa oficina antes que dê ruim de vez.</p>' : '') +
       '</div>' +
       '<div class="actions">' +
-        '<button class="btn primary" id="btn-work">Trabalhar hoje<span class="sub">' + horas + 'h disponíveis, cansaço acumula</span></button>' +
-        '<button class="btn ghost" id="btn-rest">Ficar em casa jogando CS<span class="sub">zero corrida, mas recupera o fôlego todo</span></button>' +
+        '<button class="btn primary" id="btn-work">Partiu trabalhar<span class="sub">' + horas + 'h disponíveis, cansaço acumula</span></button>' +
+        '<button class="btn ghost" id="btn-rest">Ficar em casa jogando CS<span class="sub">zero corrida, mas recupera o gás todo</span></button>' +
         '<button class="btn ghost" id="btn-repair">Consertar o Versa<span class="sub">motor em ' + Math.round(state.motor) + '%' + (custoReparo() > 0 ? ", custa " + formatMoney(custoReparo()) : "") + '</span></button>' +
         '<button class="btn ghost" id="btn-cp">Falar com CP<span class="sub">' + (state.dividaCP > 0 ? "dívida atual: " + formatMoney(state.dividaCP) : "empréstimo rápido, juros pesados") + '</span></button>' +
       '</div>';
@@ -1582,8 +1584,8 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       '<div class="scene fade-in">' +
         '<div class="eyebrow">CP resolve rápido</div>' +
         '<h2 class="scene-title">💰 O agiota atende</h2>' +
-        '<p class="body-text">CP é bombeiro de dia, agiota o resto do tempo, e anda sempre armado — melhor não atrasar. Juros de ' + Math.round(CP_JUROS_SEMANAL * 100) + '% por semana em cima do que ainda deve.</p>' +
-        (state.dividaCP > 0 ? '<p class="quote">Dívida atual: ' + formatMoney(state.dividaCP) + '</p>' : '<p class="body-text">Nenhuma dívida no momento.</p>') +
+        '<p class="body-text">CP é bombeiro de dia, agiota o resto do tempo, e anda sempre armado — melhor não atrasar com ele. Juros de ' + Math.round(CP_JUROS_SEMANAL * 100) + '% por semana em cima do que ainda deve.</p>' +
+        (state.dividaCP > 0 ? '<p class="quote">Dívida atual: ' + formatMoney(state.dividaCP) + '</p>' : '<p class="body-text">Nenhuma pendência com ele, por enquanto.</p>') +
       '</div>' +
       '<div class="actions">' +
         CP_EMPRESTIMOS.map(function (v) {
@@ -1645,7 +1647,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       '<div class="scene fade-in">' +
         '<div class="eyebrow">sem saída</div>' +
         '<h2 class="scene-title">💰 CP atende rápido</h2>' +
-        '<p class="body-text">O caixa foi pro fundo do poço: ' + formatMoney(state.dinheiro) + '. CP empresta na hora, mas os juros correm toda semana — e ele anda armado.</p>' +
+        '<p class="body-text">O caixa foi pro breu: ' + formatMoney(state.dinheiro) + '. CP resolve na hora, mas os juros correm toda semana — e ele anda armado, então nada de sumir.</p>' +
       '</div>' +
       '<div class="actions">' +
         CP_EMPRESTIMOS.map(function (v) {
@@ -1695,9 +1697,9 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
         '<div class="eyebrow">oficina</div>' +
         '<h2 class="scene-title">🔧 Consertar o Versa</h2>' +
         (custo <= 0
-          ? '<p class="body-text">Motor em 100%. Nada pra consertar agora.</p>'
-          : '<p class="body-text">Motor em <b>' + Math.round(state.motor) + '%</b>. Uma revisão completa agora deixa ele <b>100%</b> de novo, por ' + formatMoney(custo) + '.</p>' +
-            (state.motor <= MOTOR_CRITICO ? '<p class="quote" style="color:var(--bad)">O motor tá quase fundindo. Melhor resolver logo, antes que vire sucata de vez.</p>' : '')
+          ? '<p class="body-text">Motor em 100%, redondinho. Nada pra consertar agora.</p>'
+          : '<p class="body-text">Motor em <b>' + Math.round(state.motor) + '%</b>. Uma revisão geral agora deixa ele <b>100%</b> de novo, por ' + formatMoney(custo) + '.</p>' +
+            (state.motor <= MOTOR_CRITICO ? '<p class="quote" style="color:var(--bad)">O motor tá quase fundindo, mermão. Melhor resolver logo, antes que vire sucata de vez.</p>' : '')
         ) +
       '</div>' +
       '<div class="actions">' +
@@ -1763,12 +1765,15 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       corpo = '<p class="body-text">O resto do dia foi perdido de cama — trabalhou só ' + state.lastDayHoras.toFixed(1) + 'h antes de passar mal.</p>';
     } else if (state.lastDayMotivo === "estresse") {
       corpo = '<p class="body-text">A paciência zerou de vez. Naltinho largou o volante no meio da tarde e foi direto pra casa tomar um litrão sozinho.</p>';
+    } else if (state.lastDayMotivo === "motor_fundido") {
+      corpo = '<p class="body-text">O resto do dia foi todo pro guincho e pra oficina. O Versa volta rodando, mas o dia praticamente virou fumaça — igual o motor.</p>';
     } else {
       corpo = '<p class="body-text">Hernalton trabalhou cerca de ' + state.lastDayHoras.toFixed(1) + 'h hoje. O corpo cobra a conta.</p>';
     }
     var titulo2 = !state.lastDayTrabalhou ? "Dia de sofá"
       : state.lastDayMotivo === "doenca" ? "Passou mal"
       : state.lastDayMotivo === "estresse" ? "Estourou a paciência"
+      : state.lastDayMotivo === "motor_fundido" ? "De volta nas pistas, no prejuízo"
       : "Chega por hoje";
     device.innerHTML =
       renderStatbar() +
@@ -1848,9 +1853,9 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
 
     var flavor;
     if (state.forced) flavor = FORCED_ACCEPT_FLAVOR;
-    else if (pesado) flavor = "Trânsito pesado nessa. Vai comer combustível de um jeito que só se sabe depois.";
-    else if (r.valor < 20) flavor = "Corrida barata. Vai que compensa.";
-    else flavor = "Só vai saber se valeu a pena depois de aceitar.";
+    else if (pesado) flavor = "Trânsito sinistro nessa. Vai comer combustível de um jeito que só se sabe depois.";
+    else if (r.valor < 20) flavor = "Corrida barata. Vai que compensa, né mermão.";
+    else flavor = "Só vai saber se valeu a pena depois de topar.";
 
     device.innerHTML =
       renderStatbar() +
@@ -2058,8 +2063,50 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
   function afterRideComplete() {
     state.motor = clamp(state.motor - state.decayPerRide, 0, 100);
 
-    if (state.motor <= 0) { state.screen = "lose_motor"; render(); return; }
+    if (state.motor <= 0) { state.screen = "motor-fundido"; render(); return; }
     afterFinanceCheckpoint();
+  }
+
+  function renderMotorFundido() {
+    var custo = CUSTO_MOTOR_FUNDIDO;
+    var falta = Math.max(0, custo - state.dinheiro);
+    device.innerHTML =
+      renderStatbar() +
+      '<div class="scene fade-in">' +
+        '<div class="eyebrow">pane total</div>' +
+        '<h2 class="scene-title">💥 O motor fundiu de vez</h2>' +
+        '<p class="body-text">Bateu, fumaçou e morreu no meio da Baixada. Só sai dali de guincho — motor novo, reforma geral, sem meio-termo. Sai por ' + formatMoney(custo) + '.</p>' +
+        '<p class="quote" style="color:var(--bad)">Com esse perrengue, fechar a lista nos ' + TOTAL_DIAS + ' dias já tá osso. Mas ainda dá pra tentar.</p>' +
+      '</div>' +
+      '<div class="actions">' +
+        (state.dinheiro >= custo
+          ? '<button class="btn primary" id="btn-fundido-pagar">Pagar o guincho e a reforma<span class="sub">-' + formatMoney(custo) + ', motor volta a 100%</span></button>'
+          : '') +
+        (falta > 0
+          ? '<button class="btn ghost" id="btn-fundido-cp">Pegar ' + formatMoney(falta) + ' com o CP e voltar pras pistas<span class="sub">entra na dívida, mas o Versa roda de novo</span></button>'
+          : '') +
+        '<button class="btn ghost danger" id="btn-fundido-desistir">Desistir dessa vez</button>' +
+      '</div>';
+
+    var btnPagar = document.getElementById("btn-fundido-pagar");
+    if (btnPagar) btnPagar.addEventListener("click", function () {
+      state.dinheiro -= custo;
+      state.motor = 100;
+      endWorkDay("motor_fundido");
+    });
+    var btnCp = document.getElementById("btn-fundido-cp");
+    if (btnCp) btnCp.addEventListener("click", function () {
+      state.dinheiro += falta;
+      state.dividaCP += falta;
+      state.dinheiro -= custo;
+      state.motor = 100;
+      if (state.dividaCP >= CP_LIMITE_PERIGO) { state.screen = "lose_cp"; render(); return; }
+      endWorkDay("motor_fundido");
+    });
+    document.getElementById("btn-fundido-desistir").addEventListener("click", function () {
+      state.screen = "lose_motor";
+      render();
+    });
   }
 
   function afterFinanceCheckpoint() {
@@ -2273,8 +2320,8 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       renderStatbar() +
       '<div class="scene fade-in">' +
         '<div class="eyebrow">bateu a fome</div>' +
-        '<h2 class="scene-title">🍽️ Hora de comer alguma coisa</h2>' +
-        '<p class="body-text">Comer mal é barato, mas enche pouco — e passar mal tira o resto do dia. Comer bem custa mais e ainda pede uma paradinha no banheiro, mas a fome some.</p>' +
+        '<h2 class="scene-title">🍽️ Bateu a fome, precisa de um rango</h2>' +
+        '<p class="body-text">Comer mal é barato, mas enche pouco — e passar mal tira o resto do dia. Comer bem custa mais e ainda pede uma paradinha no banheiro, mas a fome some de vez.</p>' +
       '</div>' +
       '<div class="actions">' +
         FOOD_OPTIONS.map(function (f, i) {
@@ -2295,13 +2342,13 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
     var passouMal = Math.random() * 100 < opt.risco;
     if (passouMal) {
       state.cansaco = clamp(state.cansaco + 15, 0, 100);
-      state.lastComidaResultado = escapeHtml(opt.nome) + " cai mal. Dor de barriga daquelas — o resto do dia vira sofá forçado.";
+      state.lastComidaResultado = escapeHtml(opt.nome) + " cai mal, sinistro. Dor de barriga daquelas — o resto do dia vira sofá forçado.";
       state.lastComidaFimDeDia = true;
     } else {
       state.minutos += opt.paradinha;
       state.lastComidaResultado = opt.paradinha > 0
         ? "Comeu bem. A fome some pro resto do dia, mas a paradinha no banheiro custou uns minutos."
-        : "Comeu correndo. Vai aguentar mais um tempinho, pelo menos.";
+        : "Comeu correndo, no talo. Vai aguentar mais um tempinho, pelo menos.";
       state.lastComidaFimDeDia = false;
     }
     state.lastComidaChips = [
@@ -2343,7 +2390,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       renderStatbar() +
       '<div class="scene fade-in">' +
         '<div class="eyebrow">gasto inesperado</div>' +
-        '<h2 class="scene-title">💳 Caiu uma cobrança</h2>' +
+        '<h2 class="scene-title">💳 Caiu uma cobrança do nada</h2>' +
         '<p class="body-text">' + escapeHtml(g.texto) + '</p>' +
       '</div>' +
       '<div class="actions">' +
@@ -2394,8 +2441,8 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       '<div class="scene fade-in">' +
         '<div class="eyebrow">desfecho de ' + escapeHtml(state.jogador) + '</div>' +
         '<span class="badge-outcome win">vitória</span>' +
-        '<h1 class="title">Fechou a lista. Contra todas as chances.</h1>' +
-        '<p class="body-text">Bolo, lanterna de seta, PC, skin do CS, Wi-Fi, fantasia e até a pensão — tudo pago no lucro das corridas, no dia ' + state.dia + ' dos ' + TOTAL_DIAS + '. Feriado merecido a partir de agora.</p>' +
+        '<h1 class="title">Fechou a lista, mermão. Contra todas as chances.</h1>' +
+        '<p class="body-text">Bolo, lanterna de seta, PC, skin do CS, Wi-Fi, fantasia e até a pensão — tudo pago no lucro das corridas, no dia ' + state.dia + ' dos ' + TOTAL_DIAS + '. Folga merecida a partir de agora.</p>' +
         renderDayTrack() +
         statsGridHtml() +
         '<div class="eyebrow">ranking · melhores tempos</div>' +
@@ -2418,18 +2465,18 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
     clearSavedGame();
     var titulo, texto;
     if (tipo === "motor") {
-      titulo = "O motor fundiu.";
-      texto = "Óleo barato demais, revisão adiada demais. O motor bateu, fumaçou e morreu no meio da Baixada. Vai ter que empurrar o Versa até a oficina.";
+      titulo = "Desistiu do guincho.";
+      texto = "Óleo barato demais, revisão adiada demais. O motor fundiu de vez, e reformar geral saiu caro demais pro bolso. Hernalton preferiu deixar o Versa na oficina e ir embora andando mesmo.";
     } else if (tipo === "falencia") {
-      titulo = "Faliu de vez.";
-      texto = "Mais gasto que corrida boa. O caixa foi pro vermelho e não voltou. Hoje nem pra gasolina de amanhã sobrou.";
+      titulo = "Quebrou de vez.";
+      texto = "Mais gasto do que corrida boa. O caixa foi pro vermelho e não voltou mais. Hoje nem pra gasolina de amanhã sobrou, mermão.";
     } else if (tipo === "cp") {
       titulo = "CP apareceu pessoalmente.";
       texto = "A dívida cresceu rápido demais. CP apareceu numa quarta à noite, ainda de farda do quartel, e deixou bem claro que da próxima vez não seria só conversa. O Versa fica de garantia — e Hernalton reconsidera as prioridades da vida.";
     } else {
       var faltam = WISHLIST.length - state.comprasFeitas.length;
       titulo = "Os 15 dias acabaram.";
-      texto = "A lista não fechou a tempo — faltaram " + faltam + " ite" + (faltam === 1 ? "m" : "ns") + ". O desafio era essa quinzena, e a quinzena virou.";
+      texto = "A lista não fechou a tempo — faltaram " + faltam + " ite" + (faltam === 1 ? "m" : "ns") + ". O desafio era essa quinzena, e a quinzena virou, sem dó.";
     }
     var quote = "";
     if (tipo === "prazo") {
@@ -2448,7 +2495,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
         quote +
       '</div>' +
       '<div class="actions">' +
-        '<button class="btn primary" id="btn-again">Tentar o próximo mês?</button>' +
+        '<button class="btn primary" id="btn-again">Tentar a próxima quinzena?</button>' +
       '</div>';
     bindAgain();
   }
