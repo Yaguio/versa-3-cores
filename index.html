@@ -494,10 +494,10 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       escolhas: [
         { rotulo: "Óleo mais barato", sub: "economiza uns trocado agora",
           resultado: "Óleo genérico no motor. Vai rodar, mas o motor sente cada buraco da Baixada.",
-          custo: 15, decayNovo: 1.0, motor: -3, ruim: true },
+          custo: 15, decayNovo: 3.0, motor: -8, ruim: true },
         { rotulo: "Óleo bom, da marca", sub: "caro, mas o motor agradece",
           resultado: "Óleo de verdade trocado. O motor ronca mais manso, o bolso sente o tranco.",
-          custo: 35, decayNovo: 0.5, motor: 10 }
+          custo: 35, decayNovo: 1.0, motor: 12 }
       ]
     },
     {
@@ -507,10 +507,10 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       escolhas: [
         { rotulo: "Deixar pra próxima revisão", sub: "os pneus aguentam mais um pouco",
           resultado: "Vai rodando na fé. Um dia isso cobra a conta.",
-          custo: 0, decayNovo: null, motor: -3, risco: 8, ruim: true },
+          custo: 0, decayNovo: null, motor: -8, risco: 8, ruim: true },
         { rotulo: "Trocar os pneus agora", sub: "caro, mas mais seguro",
           resultado: "Pneus novos. Prato cheio pra segurança, vazio pra carteira.",
-          custo: 90, decayNovo: null, motor: 0, risco: -8 }
+          custo: 90, decayNovo: null, motor: 4, risco: -8 }
       ]
     }
   ];
@@ -919,7 +919,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       nota: 4.6,
       corPatches: 1,
       motor: 100,
-      decayPerRide: 0.7,
+      decayPerRide: 2.0,
       riscoBatidaMod: 0,
       dia: 1,
       cansaco: cansacoInicial,
