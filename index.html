@@ -415,6 +415,8 @@
   var BASE_CONSUMO = 11;          // km/l com o motor saudável
   var FALENCIA_LIMIT = -60;       // dinheiro no vermelho além disso = fim de jogo
   var MAINT_EVERY = 8;            // a cada N corridas aceitas, revisão
+  var REPARO_CUSTO_POR_PONTO = 2.2; // custo do conserto avulso por ponto de motor recuperado
+  var MOTOR_CRITICO = 25;         // abaixo disso, o jogo sugere consertar
   var CONSECUTIVE_DECLINE_LIMIT = 2;
   var RIDE_COUNTDOWN_SECONDS = 12;
   var FAMILY_CHANCE = 0.15;       // chance de interrupção familiar antes de cada corrida
@@ -614,7 +616,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       titulo: "O motoboy órfão de app",
       texto: "Um motoboy pede carona porque a moto quebrou no meio da entrega. Promete pagar em dinheiro e em “conselhos de motorista experiente”.",
       escolhas: [
-        { rotulo: "Levar e trocar figurinhas", sub: "network de app",
+        { rotulo: "Puxar conversa com ele", sub: "network de app",
           resultado: "Os dois passam a viagem trocando histórias de passageiro terrível. Hernalton sai da corrida com moral renovada e uma boa gorjeta.",
           dinheiro: 7, paciencia: 6, dano: 0, estrelas: 0.4 },
         { rotulo: "Levar calado, só ouvindo", sub: "economizar energia",
@@ -646,6 +648,149 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
         { rotulo: "Fingir que o ar quebrou", sub: "“deve ser o compressor”",
           resultado: "“Ar não pega, deve ser o compressor”, mente descaradamente com a testa suando. Passageiro desconfia, mas deixa quieto.",
           dinheiro: 0, paciencia: 2, dano: 0, estrelas: -0.6 }
+      ]
+    },
+    {
+      emoji: "🤰",
+      titulo: "A passageira com contração",
+      texto: "Ela entra ofegante: “Maternidade, rápido, por favor!” Hernalton engole seco e pisa fundo.",
+      escolhas: [
+        { rotulo: "Cortar caminho arriscado", sub: "todo atalho vale agora",
+          resultado: "Chega em tempo recorde, buzinando em cada esquina. O marido dela entra em pânico no banco de trás, mas dá certo.",
+          dinheiro: 12, paciencia: -6, dano: 15, estrelas: 0.5 },
+        { rotulo: "Seguir o trânsito com calma", sub: "sem arriscar um perrengue",
+          resultado: "Chegam alguns minutos depois, mas inteiros. Ela ainda tem tempo de sobra — era falso alarme, aliás.",
+          dinheiro: 8, paciencia: -2, dano: 0, estrelas: 0.3 }
+      ]
+    },
+    {
+      emoji: "👴",
+      titulo: "O idoso que grita ao telefone",
+      texto: "Ele passa a corrida inteira gritando no viva-voz com o filho, achando que o carro está mudo: “ALÔ? TÁ ME OUVINDO?”",
+      escolhas: [
+        { rotulo: "Pedir pra baixar o volume", sub: "com jeitinho",
+          resultado: "Ele baixa por educação, mas volta a gritar cinco minutos depois, jurando que esqueceu.",
+          dinheiro: 4, paciencia: -5, dano: 0, estrelas: 0.1 },
+        { rotulo: "Aguentar calado até o fim", sub: "só mais essa corrida",
+          resultado: "Hernalton sai da corrida com um zumbido no ouvido, mas sem confusão.",
+          dinheiro: 4, paciencia: -7, dano: 0, estrelas: 0.2 }
+      ]
+    },
+    {
+      emoji: "🌽",
+      titulo: "O caipira da festa junina",
+      texto: "Ainda de chapéu de palha e bigode de rolha, ele insiste pra parar numa barraca “só mais uma quentinha de vinho quente”.",
+      escolhas: [
+        { rotulo: "Parar na barraca", sub: "mais um atraso, mas ele agradece",
+          resultado: "Ele volta feliz com o copo na mão e ainda oferece um gole. Hernalton recusa educadamente.",
+          dinheiro: 3, paciencia: -4, dano: 0, estrelas: 0.3 },
+        { rotulo: "Recusar e seguir direto", sub: "corrida não é passeio",
+          resultado: "Ele resmunga a “festa mais sem graça do ano” o resto do caminho.",
+          dinheiro: 4, paciencia: -3, dano: 0, estrelas: -0.2 }
+      ]
+    },
+    {
+      emoji: "🇦🇷",
+      titulo: "Os turistas argentinos",
+      texto: "O casal discute Boca x River aos gritos em espanhol o caminho inteiro, cada um puxando Hernalton pro seu lado.",
+      escolhas: [
+        { rotulo: "Fingir que entende e concordar com os dois", sub: "diplomacia internacional",
+          resultado: "Os dois acham que Hernalton torce pro próprio time e ficam satisfeitos, cada um à sua maneira.",
+          dinheiro: 6, paciencia: -3, dano: 0, estrelas: 0.4 },
+        { rotulo: "Falar que aqui é Brasil, é Flamengo", sub: "neutralidade zero",
+          resultado: "Os dois param de brigar entre si só pra discordar de Hernalton juntos.",
+          dinheiro: 5, paciencia: -4, dano: 0, estrelas: 0.1 }
+      ]
+    },
+    {
+      emoji: "🎉",
+      titulo: "A galera da balada",
+      texto: "Cinco amigas entram num carro de quatro lugares, som no talo do celular, e pedem uma selfie “com o motorista mais gato da noite”.",
+      escolhas: [
+        { rotulo: "Topar a selfie e o clima", sub: "entrar na vibe",
+          resultado: "A foto sai ótima, elas prometem marcar Hernalton nos stories. Ele nunca vai saber se marcaram mesmo.",
+          dinheiro: 7, paciencia: 2, dano: 0, estrelas: 0.5 },
+        { rotulo: "Pedir pra irem só sentadas e seguir sério", sub: "trabalho é trabalho",
+          resultado: "Elas cantam o caminho inteiro, sem selfie, mas ao menos sem confusão de lotação.",
+          dinheiro: 5, paciencia: -3, dano: 0, estrelas: -0.1 }
+      ]
+    },
+    {
+      emoji: "🗣️",
+      titulo: "O passageiro fofoqueiro",
+      texto: "Antes de fechar a porta já pergunta: “E aí, quem foi o passageiro mais louco que você já pegou? Conta tudo.”",
+      escolhas: [
+        { rotulo: "Contar as fofocas, sem citar nomes", sub: "ele adora, vira amigo",
+          resultado: "Ele ri, retribui com fofocas do trabalho dele, e sai satisfeito com a troca.",
+          dinheiro: 6, paciencia: 3, dano: 0, estrelas: 0.4 },
+        { rotulo: "Ficar no “sigilo profissional”", sub: "discrição sempre",
+          resultado: "Ele insiste mais um pouco, desiste, e passa o resto da viagem no celular, meio ofendido.",
+          dinheiro: 4, paciencia: -2, dano: 0, estrelas: 0.1 }
+      ]
+    },
+    {
+      emoji: "📦",
+      titulo: "O entregador atrasado",
+      texto: "Ele pede, quase implorando: “só mais uma parada rapidinha, se eu perder essa entrega o aplicativo me bane.”",
+      escolhas: [
+        { rotulo: "Fazer o desvio rapidinho", sub: "solidariedade de app pra app",
+          resultado: "O desvio some com dez minutos, mas ele desce agradecendo com efusão — e uma gorjeta melhor que o esperado.",
+          dinheiro: 5, paciencia: -4, dano: 0, estrelas: 0.3 },
+        { rotulo: "Seguir a rota original", sub: "cada um cuida do seu app",
+          resultado: "Ele desce resmungando, mas Hernalton chega no horário certo pra próxima corrida.",
+          dinheiro: 4, paciencia: -1, dano: 0, estrelas: -0.1 }
+      ]
+    },
+    {
+      emoji: "😤",
+      titulo: "O torcedor do time rival",
+      texto: "Vê o chaveirinho do time no retrovisor e não perde a chance: “Esse aí não ganha nem amistoso, hein.”",
+      escolhas: [
+        { rotulo: "Rebater à altura", sub: "honra do time em jogo",
+          resultado: "Vira bate-boca amigável até o destino. No fim riem juntos, mas Hernalton não esquece a provocação.",
+          dinheiro: 5, paciencia: -5, dano: 0, estrelas: 0.2 },
+        { rotulo: "Ignorar e ligar o rádio", sub: "não vale a briga",
+          resultado: "Ele continua provocando sozinho, sem plateia, até desistir por falta de graça.",
+          dinheiro: 4, paciencia: -3, dano: 0, estrelas: -0.1 }
+      ]
+    },
+    {
+      emoji: "💸",
+      titulo: "Esqueceu a carteira em casa",
+      texto: "Chegando no destino, ele revira os bolsos, pálido: “Cara, esqueci a carteira. Faço um PIX pra você depois, juro.”",
+      escolhas: [
+        { rotulo: "Confiar e deixar ele ir", sub: "fé no PIX prometido",
+          resultado: "O PIX nunca chega. Hernalton aprende, de novo, que fé não paga gasolina.",
+          dinheiro: -8, paciencia: -5, dano: 0, estrelas: -0.1 },
+        { rotulo: "Insistir pra resolver ali mesmo", sub: "ninguém sai sem pagar",
+          resultado: "Depois de muito custo, ele acha uma nota amassada no fundo da mochila. Resolvido, sem climão.",
+          dinheiro: 2, paciencia: -5, dano: 0, estrelas: -0.2 }
+      ]
+    },
+    {
+      emoji: "🚖",
+      titulo: "O motorista de outro app, de folga",
+      texto: "Ele é motorista de outro aplicativo e passa a viagem inteira detonando a concorrência: “Lá vocês nem sabem o que é receber direito.”",
+      escolhas: [
+        { rotulo: "Concordar e desabafar junto", sub: "união de categoria",
+          resultado: "Os dois trocam guerra de aplicativo por vinte minutos. Sai de lá com um novo parceiro de reclamação.",
+          dinheiro: 6, paciencia: 4, dano: 0, estrelas: 0.3 },
+        { rotulo: "Defender o aplicativo mesmo assim", sub: "tem que ter lealdade",
+          resultado: "Ele ri: “Você defendendo esse aplicativo é a corrida mais engraçada que eu peguei este mês.”",
+          dinheiro: 5, paciencia: -3, dano: 0, estrelas: 0.1 }
+      ]
+    },
+    {
+      emoji: "💻",
+      titulo: "A executiva em reunião de trabalho",
+      texto: "Ela entra de fone, já em call, e sussurra tapando o microfone: “Silêncio total, por favor, é com o diretor.”",
+      escolhas: [
+        { rotulo: "Desligar até o ar condicionado", sub: "silêncio de cemitério",
+          resultado: "A reunião corre bem, ela sai satisfeita e discreta — nota máxima, sem uma palavra trocada.",
+          dinheiro: 5, paciencia: -3, dano: 0, estrelas: 0.5 },
+        { rotulo: "Manter tudo normal, ela que se vire", sub: "carro não é escritório",
+          resultado: "Ela tampa o microfone o tempo todo praguejando baixinho, mas sobrevive à reunião.",
+          dinheiro: 4, paciencia: -2, dano: 0, estrelas: -0.2 }
       ]
     }
   ];
@@ -744,6 +889,62 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
           resultado: "Nublinho já sai catando balde em outro lugar.",
           dinheiro: 0, paciencia: -3, minutos: 6 }
       ]
+    },
+    {
+      emoji: "🐔",
+      titulo: "Primo Nublinho e a criação de galinha caipira",
+      texto: "“Ovo caipira tá valendo ouro, primo. Só preciso de umas galinhas e um espacinho no seu quintal.”",
+      escolhas: [
+        { rotulo: "Financiar as galinhas", sub: "ovo de ouro, segundo ele",
+          resultado: "As galinhas fogem no primeiro dia e viram problema dos vizinhos.",
+          resultadoSorte: "As galinhas põem tanto ovo que sobra até pra vender na rua.",
+          dinheiro: -16, paciencia: -4, minutos: 15, sorteChance: 40, sorteBonus: 42, ruim: true },
+        { rotulo: "Não entrar dessa vez", sub: "quintal não é fazenda",
+          resultado: "Nublinho sai procurando outro quintal disponível.",
+          dinheiro: 0, paciencia: -2, minutos: 5 }
+      ]
+    },
+    {
+      emoji: "🎓",
+      titulo: "Primo Nublinho e o curso de enriquecimento",
+      texto: "“Achei um curso online, primo, é só pagar a inscrição que o cara ensina a ficar rico dormindo.”",
+      escolhas: [
+        { rotulo: "Pagar a inscrição pros dois", sub: "investimento no futuro",
+          resultado: "O curso era só um PDF de dez páginas com frases de efeito. Nublinho jura que “o próximo módulo é o bom”.",
+          resultadoSorte: "Uma das dicas realmente funciona e o dinheiro volta em dobro numa revenda rápida.",
+          dinheiro: -20, paciencia: -3, minutos: 10, sorteChance: 40, sorteBonus: 48, ruim: true },
+        { rotulo: "Não entrar dessa vez", sub: "rico dormindo é suspeito",
+          resultado: "“Você vai ficar pobre por desconfiado”, ele avisa, guardando o link.",
+          dinheiro: 0, paciencia: -2, minutos: 5 }
+      ]
+    },
+    {
+      emoji: "🚲",
+      titulo: "Primo Nublinho e a rifa da bicicleta",
+      texto: "“Rifa de bicicleta, primo, número baratinho. Capaz até de eu ganhar a minha própria rifa.”",
+      escolhas: [
+        { rotulo: "Comprar uns números", sub: "capaz de dar sorte",
+          resultado: "A bicicleta nem existe direito — era só uma foto tirada da internet.",
+          resultadoSorte: "O número bate de verdade e a bicicleta chega, meio enferrujada, mas chega.",
+          dinheiro: -12, paciencia: -3, minutos: 10, sorteChance: 40, sorteBonus: 30, ruim: true },
+        { rotulo: "Não entrar dessa vez", sub: "rifa de bicicleta fantasma",
+          resultado: "Nublinho vai vender pro próximo parente da fila.",
+          dinheiro: 0, paciencia: -2, minutos: 5 }
+      ]
+    },
+    {
+      emoji: "🫓",
+      titulo: "Primo Nublinho e o food truck de tapioca",
+      texto: "“Vi um food truck usado baratinho, primo. Só falta o sinal e sua confiança de sempre.”",
+      escolhas: [
+        { rotulo: "Entrar de sócio no sinal", sub: "tapioca é sucesso garantido",
+          resultado: "O “food truck” era um carrinho de mão com uma chapa presa com fita isolante.",
+          resultadoSorte: "O carrinho de tapioca vira febre no ponto de ônibus e o dinheiro volta rápido.",
+          dinheiro: -28, paciencia: -6, minutos: 20, sorteChance: 40, sorteBonus: 55, ruim: true },
+        { rotulo: "Não entrar dessa vez", sub: "sinal é sagrado",
+          resultado: "“Sua tapioca ia ser famosa”, ele lamenta, guardando a chapa de novo.",
+          dinheiro: 0, paciencia: -3, minutos: 8 }
+      ]
     }
   ];
 
@@ -810,6 +1011,45 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
           dinheiro: 0, paciencia: -3, minutos: 50 },
         { rotulo: "Arranjar uma desculpa", sub: "menos tempo, mais treta",
           resultado: "Tortuga resmunga que “ninguém mais ajuda a escola direito”.",
+          dinheiro: 0, paciencia: -6, minutos: 12 }
+      ]
+    },
+    {
+      emoji: "🥁",
+      titulo: "Seu Tortuga precisa de um favor",
+      texto: "Pede pra buscar os instrumentos emprestados de outra escola pro ensaio da bateria de hoje à noite.",
+      escolhas: [
+        { rotulo: "Fazer o favor", sub: "instrumentos são pesados e frágeis",
+          resultado: "O Versa vira caminhão de bateria por uma hora, mas nada quebra no caminho.",
+          dinheiro: 0, paciencia: -4, minutos: 55 },
+        { rotulo: "Arranjar uma desculpa", sub: "menos tempo, mais treta",
+          resultado: "“A bateria vai ensaiar sem instrumento por sua causa”, ele dispara, magoado.",
+          dinheiro: 0, paciencia: -6, minutos: 12 }
+      ]
+    },
+    {
+      emoji: "🎫",
+      titulo: "Seu Tortuga precisa de um favor",
+      texto: "Pede pra rodar com os talões de rifa da escola no banco de trás e vender pros passageiros “que tiverem cara boa”.",
+      escolhas: [
+        { rotulo: "Fazer o favor", sub: "corretor de rifa não remunerado",
+          resultado: "Vende dois talões pros passageiros e entrega o dinheiro certinho pro pai — sem ficar com nada.",
+          dinheiro: 0, paciencia: -3, minutos: 30 },
+        { rotulo: "Arranjar uma desculpa", sub: "menos tempo, mais treta",
+          resultado: "Tortuga guarda os talões “pra você vender amanhã, sem desculpa”.",
+          dinheiro: 0, paciencia: -5, minutos: 10 }
+      ]
+    },
+    {
+      emoji: "🔊",
+      titulo: "Seu Tortuga precisa de um favor",
+      texto: "Pede o Versa emprestado por uma hora pra rebocar o carro de som quebrado até o ensaio da quadra.",
+      escolhas: [
+        { rotulo: "Emprestar o Versa", sub: "reboque de fortuna",
+          resultado: "O Versa reboca o carro de som na base da corda e do grito. Chega inteiro, café com leite.",
+          dinheiro: 0, paciencia: -5, minutos: 45 },
+        { rotulo: "Arranjar uma desculpa", sub: "menos tempo, mais treta",
+          resultado: "“Nem o carro você empresta pro pai”, ele resmunga, indo resolver sozinho.",
           dinheiro: 0, paciencia: -6, minutos: 12 }
       ]
     }
@@ -946,6 +1186,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       fabiTrigger: false,
       lastFamilyTexto: null,
       dividaCP: 0,
+      repairReturnScreen: null,
       comeuHoje: false,
       dinheiroInicioDia: 0,
       proximoIndex: 0,
@@ -1027,11 +1268,28 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
     }
   }
 
-  function addRankingEntry(jogador, dia) {
+  function tempoDesafioEmMinutos(dia, minutos) {
+    var diasCompletos = dia - 1;
+    var minutosHoje = Math.max(0, minutos - 400);
+    return diasCompletos * 1440 + minutosHoje;
+  }
+
+  function formatTempo(totalMinutos) {
+    var dias = Math.floor(totalMinutos / 1440);
+    var horas = Math.floor((totalMinutos % 1440) / 60);
+    return dias + (dias === 1 ? " dia" : " dias") + " e " + horas + "h";
+  }
+
+  // entradas antigas de ranking (de antes do tempo em dias/horas) só tinham "dia" — trata como fim daquele dia
+  function tempoDeEntry(r) {
+    return typeof r.tempoMinutos === "number" ? r.tempoMinutos : (Number(r.dia) || 0) * 1440;
+  }
+
+  function addRankingEntry(jogador, tempoMinutos) {
     var list = loadRanking();
-    var entry = { jogador: jogador || "Anônimo", dia: dia, quando: Date.now() };
+    var entry = { jogador: jogador || "Anônimo", tempoMinutos: tempoMinutos, quando: Date.now() };
     list.push(entry);
-    list.sort(function (a, b) { return a.dia - b.dia; });
+    list.sort(function (a, b) { return tempoDeEntry(a) - tempoDeEntry(b); });
     list = list.slice(0, 10);
     try { localStorage.setItem(RANKING_KEY, JSON.stringify(list)); } catch (e) {}
     return { list: list, entry: entry };
@@ -1046,8 +1304,8 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       .catch(function () { return { list: loadRanking(), online: false }; });
   }
 
-  function submitGlobalRanking(jogador, dia) {
-    var entry = { jogador: jogador || "Anônimo", dia: dia };
+  function submitGlobalRanking(jogador, tempoMinutos) {
+    var entry = { jogador: jogador || "Anônimo", tempoMinutos: tempoMinutos };
     return fetch(RANKING_API, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -1056,7 +1314,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       .then(function (r) { if (!r.ok) throw new Error("bad status"); return r.json(); })
       .then(function (data) { return { list: data.list || [], entry: entry, online: true }; })
       .catch(function () {
-        var local = addRankingEntry(jogador, dia);
+        var local = addRankingEntry(jogador, tempoMinutos);
         return { list: local.list, entry: local.entry, online: false };
       });
   }
@@ -1066,11 +1324,11 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       return '<p class="body-text">Ainda não tem ninguém no ranking. Seja o primeiro a fechar a lista.</p>';
     }
     var rows = list.map(function (r, i) {
-      var isDestaque = destaque && r.jogador === destaque.jogador && r.dia === destaque.dia;
+      var isDestaque = destaque && r.jogador === destaque.jogador && tempoDeEntry(r) === destaque.tempoMinutos;
       return (
         '<div class="row"' + (isDestaque ? ' style="color:var(--gold);font-weight:700;"' : '') + '>' +
           '<span>' + (i + 1) + '. ' + escapeHtml(r.jogador) + '</span>' +
-          '<span class="val">dia ' + r.dia + '</span>' +
+          '<span class="val">' + formatTempo(tempoDeEntry(r)) + '</span>' +
         '</div>'
       );
     }).join("");
@@ -1194,6 +1452,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
     if (state.screen === "gasto") return renderGasto();
     if (state.screen === "cp") return renderCP();
     if (state.screen === "cp-emergencia") return renderCPEmergencia();
+    if (state.screen === "repair") return renderRepair();
     if (state.screen === "win") return renderWin();
     if (state.screen === "lose_motor") return renderLose("motor");
     if (state.screen === "lose_falencia") return renderLose("falencia");
@@ -1300,14 +1559,17 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
         renderDayTrack() +
         '<p class="body-text">Hoje ele aguenta até <b>' + horas + 'h</b> de trabalho antes de precisar parar.</p>' +
         '<p class="body-text">Trabalhar demais cansa e encurta o dia de amanhã. Ficar em casa recupera tudo — só que também não rende nada.</p>' +
+        (state.motor <= MOTOR_CRITICO ? '<p class="quote" style="color:var(--bad)">🔧 O motor tá em ' + Math.round(state.motor) + '%, quase fundindo. Bora numa oficina antes de continuar.</p>' : '') +
       '</div>' +
       '<div class="actions">' +
         '<button class="btn primary" id="btn-work">Trabalhar hoje<span class="sub">' + horas + 'h disponíveis, cansaço acumula</span></button>' +
         '<button class="btn ghost" id="btn-rest">Ficar em casa jogando CS<span class="sub">zero corrida, mas recupera o fôlego todo</span></button>' +
+        '<button class="btn ghost" id="btn-repair">Consertar o Versa<span class="sub">motor em ' + Math.round(state.motor) + '%' + (custoReparo() > 0 ? ", custa " + formatMoney(custoReparo()) : "") + '</span></button>' +
         '<button class="btn ghost" id="btn-cp">Falar com CP<span class="sub">' + (state.dividaCP > 0 ? "dívida atual: " + formatMoney(state.dividaCP) : "empréstimo rápido, juros pesados") + '</span></button>' +
       '</div>';
     document.getElementById("btn-work").addEventListener("click", startWorkDay);
     document.getElementById("btn-rest").addEventListener("click", restDay);
+    document.getElementById("btn-repair").addEventListener("click", function () { irParaConserto("day-intro"); });
     document.getElementById("btn-cp").addEventListener("click", function () {
       state.screen = "cp";
       render();
@@ -1407,6 +1669,63 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       state.screen = "lose_falencia";
       render();
     });
+  }
+
+  function custoReparo() {
+    return Math.ceil((100 - state.motor) * REPARO_CUSTO_POR_PONTO);
+  }
+
+  function irParaConserto(voltarPara) {
+    state.repairReturnScreen = voltarPara;
+    state.screen = "repair";
+    render();
+  }
+
+  function voltarDoConserto() {
+    state.screen = state.repairReturnScreen || "day-intro";
+    render();
+  }
+
+  function renderRepair() {
+    var custo = custoReparo();
+    var falta = Math.max(0, custo - state.dinheiro);
+    device.innerHTML =
+      renderStatbar() +
+      '<div class="scene fade-in">' +
+        '<div class="eyebrow">oficina</div>' +
+        '<h2 class="scene-title">🔧 Consertar o Versa</h2>' +
+        (custo <= 0
+          ? '<p class="body-text">Motor em 100%. Nada pra consertar agora.</p>'
+          : '<p class="body-text">Motor em <b>' + Math.round(state.motor) + '%</b>. Uma revisão completa agora deixa ele <b>100%</b> de novo, por ' + formatMoney(custo) + '.</p>' +
+            (state.motor <= MOTOR_CRITICO ? '<p class="quote" style="color:var(--bad)">O motor tá quase fundindo. Melhor resolver logo, antes que vire sucata de vez.</p>' : '')
+        ) +
+      '</div>' +
+      '<div class="actions">' +
+        (custo > 0 && state.dinheiro >= custo
+          ? '<button class="btn primary" id="btn-reparar">Consertar agora<span class="sub">-' + formatMoney(custo) + ', motor volta a 100%</span></button>'
+          : '') +
+        (custo > 0 && falta > 0
+          ? '<button class="btn ghost" id="btn-reparar-cp">Pegar ' + formatMoney(falta) + ' com o CP e consertar<span class="sub">entra na dívida, mas salva o motor</span></button>'
+          : '') +
+        '<button class="btn ghost" id="btn-repair-voltar">Voltar</button>' +
+      '</div>';
+
+    var btnReparar = document.getElementById("btn-reparar");
+    if (btnReparar) btnReparar.addEventListener("click", function () {
+      state.dinheiro -= custo;
+      state.motor = 100;
+      voltarDoConserto();
+    });
+    var btnRepararCp = document.getElementById("btn-reparar-cp");
+    if (btnRepararCp) btnRepararCp.addEventListener("click", function () {
+      state.dinheiro += falta;
+      state.dividaCP += falta;
+      state.dinheiro -= custo;
+      state.motor = 100;
+      if (state.dividaCP >= CP_LIMITE_PERIGO) { state.screen = "lose_cp"; render(); return; }
+      voltarDoConserto();
+    });
+    document.getElementById("btn-repair-voltar").addEventListener("click", voltarDoConserto);
   }
 
   function startWorkDay() {
@@ -1717,8 +2036,11 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       '</div>' +
       '<div class="actions">' +
         '<button class="btn primary" id="btn-continue">Seguir o dia</button>' +
+        (state.motor <= MOTOR_CRITICO ? '<button class="btn ghost" id="btn-repair-now">Consertar o Versa<span class="sub">motor em ' + Math.round(state.motor) + '%</span></button>' : '') +
       '</div>';
     document.getElementById("btn-continue").addEventListener("click", function () { maybeShowFabi(afterRideComplete); });
+    var btnRepairNow = document.getElementById("btn-repair-now");
+    if (btnRepairNow) btnRepairNow.addEventListener("click", function () { irParaConserto("resolution"); });
   }
 
   function tryAutoBuy() {
@@ -2072,7 +2394,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       '<div class="scene fade-in">' +
         '<div class="eyebrow">desfecho de ' + escapeHtml(state.jogador) + '</div>' +
         '<span class="badge-outcome win">vitória</span>' +
-        '<h1 class="title">Comprou tudo. Sério.</h1>' +
+        '<h1 class="title">Fechou a lista. Contra todas as chances.</h1>' +
         '<p class="body-text">Bolo, lanterna de seta, PC, skin do CS, Wi-Fi, fantasia e até a pensão — tudo pago no lucro das corridas, no dia ' + state.dia + ' dos ' + TOTAL_DIAS + '. Feriado merecido a partir de agora.</p>' +
         renderDayTrack() +
         statsGridHtml() +
@@ -2083,7 +2405,8 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
         '<button class="btn primary" id="btn-again">Rodar outro desafio</button>' +
       '</div>';
     bindAgain();
-    submitGlobalRanking(state.jogador, state.dia).then(function (result) {
+    var tempoMinutos = tempoDesafioEmMinutos(state.dia, state.minutos);
+    submitGlobalRanking(state.jogador, tempoMinutos).then(function (result) {
       var slot = document.getElementById("ranking-slot");
       if (!slot) return;
       slot.innerHTML = renderRankingHtml(result.list, result.entry) +
