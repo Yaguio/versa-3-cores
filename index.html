@@ -529,6 +529,45 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
           resultado: "Pneus novos. Prato cheio pra segurança, vazio pra carteira.",
           custo: 90, decayNovo: null, motor: 4, risco: -8 }
       ]
+    },
+    {
+      emoji: "🛑",
+      titulo: "Freio rangendo",
+      texto: "Toda freada vem com um guincho que faz todo mundo no farol olhar pro carro. As pastilhas já eram.",
+      escolhas: [
+        { rotulo: "Deixar rangendo mais um tempo", sub: "freia, só que com escândalo",
+          resultado: "O ranger vira parte da identidade sonora do Versa. Funciona, mas todo mundo sabe que ele tá chegando.",
+          custo: 0, decayNovo: null, motor: -10, risco: 10, ruim: true },
+        { rotulo: "Trocar as pastilhas agora", sub: "silêncio que vale a pena",
+          resultado: "Pastilhas novas, freio manso de novo. Ninguém mais se assusta no farol.",
+          custo: 60, decayNovo: null, motor: 6, risco: -10 }
+      ]
+    },
+    {
+      emoji: "🔋",
+      titulo: "Bateria fraca",
+      texto: "O carro demora cada vez mais pra pegar de manhã. Um dia desses vai ficar só no clique-clique.",
+      escolhas: [
+        { rotulo: "Empurrar e torcer", sub: "economiza, mas é osso",
+          resultado: "Pede ajuda do vizinho pra empurrar mais uma vez. Funcionou, dessa vez.",
+          custo: 0, decayNovo: null, motor: -6, ruim: true },
+        { rotulo: "Trocar a bateria", sub: "caro, mas liga na hora",
+          resultado: "Bateria nova instalada. O motor pega de primeira, sem drama nenhum.",
+          custo: 70, decayNovo: null, motor: 8 }
+      ]
+    },
+    {
+      emoji: "🕳️",
+      titulo: "Suspensão surrada",
+      texto: "Cada buraco da Baixada agora sacode o carro inteiro, e o barulho de lata batendo já virou rotina.",
+      escolhas: [
+        { rotulo: "Seguir no buraco mesmo", sub: "o Versa que aguente",
+          resultado: "O carro sacode, os passageiros reclamam, mas segue rodando na raça.",
+          custo: 0, decayNovo: null, motor: -9, risco: 5, ruim: true },
+        { rotulo: "Fazer a suspensão", sub: "caro, mas acaba com o sacolejo",
+          resultado: "Suspensão nova, carro manso até nos buracos da Baixada. Diferença absurda.",
+          custo: 110, decayNovo: null, motor: 10, risco: -5 }
+      ]
     }
   ];
 
@@ -698,9 +737,9 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
         { rotulo: "Fingir que entende e concordar com os dois", sub: "diplomacia internacional",
           resultado: "Os dois acham que Hernalton torce pro próprio time e ficam satisfeitos, cada um à sua maneira.",
           dinheiro: 6, paciencia: -3, dano: 0, estrelas: 0.4 },
-        { rotulo: "Falar que aqui é Brasil, é Flamengo", sub: "neutralidade zero",
-          resultado: "Os dois param de brigar entre si só pra discordar de Hernalton juntos.",
-          dinheiro: 5, paciencia: -4, dano: 0, estrelas: 0.1 }
+        { rotulo: "Confessar que também torce pra Argentina", sub: "traição pátria assumida",
+          resultado: "Hernalton solta que é Botafogo, mas na seleção sempre torceu pra Scaloneta “desde o Maradona”. Os dois esquecem Boca x River na hora, abraçam ele, e ainda tiram foto pro grupo do bairro.",
+          dinheiro: 8, paciencia: 2, dano: 0, estrelas: 0.5 }
       ]
     },
     {
@@ -745,10 +784,10 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
     {
       emoji: "😤",
       titulo: "O torcedor do time rival",
-      texto: "Vê o chaveirinho do time no retrovisor e não perde a chance: “Esse aí não ganha nem amistoso, hein.”",
+      texto: "Vê o chaveirinho do Botafogo no retrovisor e não perde a chance: “Bota rebaixa esse ano de novo, hein, mermão?”",
       escolhas: [
-        { rotulo: "Rebater à altura", sub: "honra do time em jogo",
-          resultado: "Vira bate-boca amigável até o destino. No fim riem juntos, mas Hernalton não esquece a provocação.",
+        { rotulo: "Rebater à altura", sub: "honra do Fogão em jogo",
+          resultado: "Vira bate-boca amigável até o destino, cada um puxando escalação e final de campeonato. No fim riem juntos, mas Hernalton não esquece a provocação — rebaixamento é ferida que não fecha.",
           dinheiro: 5, paciencia: -5, dano: 0, estrelas: 0.2 },
         { rotulo: "Ignorar e ligar o rádio", sub: "não vale a briga",
           resultado: "Ele continua provocando sozinho, sem plateia, até desistir por falta de graça.",
@@ -1060,12 +1099,15 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
     { texto: "Zoah decidiu que a parede da sala precisava de um mural novo — com caneta permanente.", dinheiro: -18, paciencia: -5 },
     { texto: "Zoah jogou o controle da TV no vaso sanitário “pra ver se afundava”. Afundou.", dinheiro: -12, paciencia: -4 },
     { texto: "Zoah quebrou o tablet tentando descobrir “o que tem dentro”.", dinheiro: -15, paciencia: -3 },
-    { texto: "Zoah entupiu a pia da cozinha enfiando brinquedo, e o encanador não veio de graça.", dinheiro: -10, paciencia: -6 }
+    { texto: "Zoah entupiu a pia da cozinha enfiando brinquedo, e o encanador não veio de graça.", dinheiro: -10, paciencia: -6 },
+    { texto: "Zoah cortou o próprio cabelo com a tesoura da escola “pra ficar igual ao jogador”. Ficou torto.", dinheiro: -14, paciencia: -5 },
+    { texto: "Zoah derramou suco de uva no sofá inteiro tentando fazer “suco de mágico”.", dinheiro: -16, paciencia: -4 }
   ];
   var VOAH_GANHOS = [
     { texto: "Zoah achou uma nota esquecida no sofá e devolveu com orgulho.", dinheiro: 10, paciencia: 4 },
     { texto: "Zoah vendeu, sozinho e na cara de pau, um brinquedo velho pro filho do vizinho.", dinheiro: 8, paciencia: 3 },
-    { texto: "Zoah convenceu a vovó a mandar um Pix “de incentivo” pro pai.", dinheiro: 12, paciencia: 5 }
+    { texto: "Zoah convenceu a vovó a mandar um Pix “de incentivo” pro pai.", dinheiro: 12, paciencia: 5 },
+    { texto: "Zoah ganhou uma rifa da escola e insistiu em dividir o prêmio com o pai.", dinheiro: 9, paciencia: 4 }
   ];
 
   var REST_FLAVORS = [
@@ -1089,13 +1131,23 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
   var GASTOS_ALEATORIOS = [
     { texto: "Venceu a parcela do passeio de barco na Urca, no cartão da prima. Ela já descontou da conta dele sem nem avisar.", valor: 45 },
     { texto: "A conta de luz atrasada voltou com multa e juros. Sinistro.", valor: 30 },
-    { texto: "Uma assinatura de aplicativo que ele esqueceu de cancelar renovou sozinha.", valor: 22 }
+    { texto: "Uma assinatura de aplicativo que ele esqueceu de cancelar renovou sozinha.", valor: 22 },
+    { texto: "Multa de trânsito por causa daquele desvio “rapidinho” que não era tão rapidinho assim.", valor: 55 },
+    { texto: "O IPVA atrasado voltou com lembrete e juros. Só alegria.", valor: 65 },
+    { texto: "A resenha de sexta na casa do primo virou rodada de cerveja “por conta de todo mundo”, e todo mundo era ele.", valor: 20 },
+    { texto: "O plano de dados do celular estourou o limite antes do fim do mês, de novo.", valor: 18 },
+    { texto: "Emprestou uma grana pro vizinho “só até o dia 5” e o dia 5 já passou fazem duas semanas.", valor: 25 }
   ];
+
+  // saca uma carta do baralho embaralhado sem repetir até esgotar o maço inteiro
+  function pickFromDeck(deckKey, pool) {
+    if (!state[deckKey] || !state[deckKey].length) state[deckKey] = shuffle(pool.slice());
+    return state[deckKey].pop();
+  }
 
   function buildZoahEvent() {
     var bom = Math.random() < 0.2;
-    var pool = bom ? VOAH_GANHOS : VOAH_MISHAPS;
-    var pick = pool[Math.floor(Math.random() * pool.length)];
+    var pick = bom ? pickFromDeck("zoahGanhoDeck", VOAH_GANHOS) : pickFromDeck("zoahMishapDeck", VOAH_MISHAPS);
     return {
       emoji: "🧒",
       titulo: "O pequeno Zoah",
@@ -1108,17 +1160,10 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
   }
 
   function pickFamilyEvent() {
-    var pick;
-    var attempts = 0;
-    do {
-      var roll = Math.random();
-      if (roll < 0.45) pick = NUBLINHO_EVENTS[Math.floor(Math.random() * NUBLINHO_EVENTS.length)];
-      else if (roll < 0.70) pick = buildZoahEvent();
-      else pick = BERRUGA_FAVORS[Math.floor(Math.random() * BERRUGA_FAVORS.length)];
-      attempts++;
-    } while (pick.texto === state.lastFamilyTexto && pick.emoji !== "🧒" && attempts < 4);
-    state.lastFamilyTexto = pick.texto;
-    return pick;
+    var roll = Math.random();
+    if (roll < 0.45) return pickFromDeck("nublinhoDeck", NUBLINHO_EVENTS);
+    if (roll < 0.70) return buildZoahEvent();
+    return pickFromDeck("tortugaDeck", BERRUGA_FAVORS);
   }
 
   var ENDING_QUOTES_PATIENCE = {
@@ -1185,7 +1230,6 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       recusasSeguidas: 0,
       lastMaintAt: 0,
       fabiTrigger: false,
-      lastFamilyTexto: null,
       dividaCP: 0,
       repairReturnScreen: null,
       comeuHoje: false,
@@ -1194,6 +1238,12 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       comprasFeitas: [],
       deck: shuffle(RIDES.slice()),
       encounterDeck: shuffle(ENCOUNTERS.slice()),
+      nublinhoDeck: shuffle(NUBLINHO_EVENTS.slice()),
+      tortugaDeck: shuffle(BERRUGA_FAVORS.slice()),
+      zoahMishapDeck: shuffle(VOAH_MISHAPS.slice()),
+      zoahGanhoDeck: shuffle(VOAH_GANHOS.slice()),
+      gastoDeck: shuffle(GASTOS_ALEATORIOS.slice()),
+      maintenanceDeck: shuffle(MAINTENANCE.slice()),
       minutos: 400, // 06:40
       screen: "intro"
     };
@@ -1476,7 +1526,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
       '</div>' +
       '<div class="scene fade-in">' +
         '<div class="eyebrow">o desafio de 15 dias de Versa 3 Cores</div>' +
-        '<p class="body-text">O Versa é marrom. Depois de tantas batidas que o dono jura que “não foi culpa minha”, pode ganhar até mais duas cores diferentes de porta e capô. Hernalton Junior mora na Baixada mas roda o Rio inteiro, não tá a fim de trampar, só topa corrida boa, é mão de vaca até com o próprio ar condicionado, e vive de marcação em cima de todo passageiro do dia.</p>' +
+        '<p class="body-text">O Versa é marrom. Depois de tantas batidas que o dono jura que “não foi culpa minha”, pode ganhar até mais duas cores diferentes de porta e capô. Hernalton Junior mora na Baixada mas roda o Rio inteiro, não tá a fim de trampar, só topa corrida boa, é mão de vaca até com o próprio ar condicionado, e vive de marcação em cima de todo passageiro do dia. É Botafogo raiz, sofre o rebaixamento todo ano de novo, e — segredo mal guardado — também torce pra Argentina, brasileiro traindo a pátria mesmo.</p>' +
         '<p class="body-text">E passageiro nem é o pior, mermão: o primo Nublinho sempre tem uma ideia de negócio, o pequeno Zoah apronta das suas, seu Tortuga cobra favor pra escola de samba Acadêmicos do Vinho, e o primo Fabi Jujuba tira uma casquinha de cada decisão errada.</p>' +
         '<p class="body-text"><b>Você tem uma quinzena</b> (15 dias) pra ele fechar a grana de tudo que tá na lista abaixo com o lucro das corridas. Trabalhar demais acaba com o cara e encurta o dia seguinte; ficar em casa — paixão secreta dele — recupera o gás. <b>Perde</b> quem fundir o motor, quebrar de vez, ou chegar ao dia 16 sem fechar a lista.</p>' +
         '<ul class="wishlist-intro">' + lista + '</ul>' +
@@ -1545,6 +1595,8 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
     state.minutos = 400;
     state.tentativasHoje = 0;
     state.comeuHoje = false;
+    state.familyHoje = false;
+    state.gastoHoje = false;
     state.dinheiroInicioDia = state.dinheiro;
     state.screen = "day-intro";
     saveGame();
@@ -1816,14 +1868,16 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
     }
 
     var roll = Math.random();
-    if (roll < FAMILY_CHANCE) {
+    if (!state.familyHoje && roll < FAMILY_CHANCE) {
+      state.familyHoje = true;
       state.currentFamily = pickFamilyEvent();
       state.screen = "family";
       render();
       return;
     }
-    if (roll < FAMILY_CHANCE + GASTO_CHANCE) {
-      state.currentGasto = GASTOS_ALEATORIOS[Math.floor(Math.random() * GASTOS_ALEATORIOS.length)];
+    if (!state.gastoHoje && roll < FAMILY_CHANCE + GASTO_CHANCE) {
+      state.gastoHoje = true;
+      state.currentGasto = pickFromDeck("gastoDeck", GASTOS_ALEATORIOS);
       state.screen = "gasto";
       render();
       return;
@@ -2146,7 +2200,7 @@ var COVER_IMG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAQDAwQD
   function proceedAfterFinance() {
     if (state.aceitas > 0 && state.aceitas % MAINT_EVERY === 0 && state.lastMaintAt !== state.aceitas) {
       state.lastMaintAt = state.aceitas;
-      state.currentMaintenance = MAINTENANCE[Math.floor(Math.random() * MAINTENANCE.length)];
+      state.currentMaintenance = pickFromDeck("maintenanceDeck", MAINTENANCE);
       state.screen = "maintenance";
       render();
       return;
